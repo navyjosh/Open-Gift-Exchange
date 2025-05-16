@@ -15,22 +15,22 @@ export default function WishlistForm() {
         e.preventDefault()
         if (!name.trim()) return
 
-       addItem({ id: randomUUID(), name, link})
-       setName('')
-       setLink('')
+        addItem({ id: randomUUID(), name, link })
+        setName('')
+        setLink('')
 
     }
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
-            <input 
-            type="text"
-            placeholder="Item name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="border p-2 w-full rounded"
-            required
+            <input
+                type="text"
+                placeholder="Item name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="border p-2 w-full rounded"
+                required
             />
-            <input 
+            <input
                 type="url"
                 placeholder="Optional link"
                 value={link}

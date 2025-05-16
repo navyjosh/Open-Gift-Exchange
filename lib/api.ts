@@ -2,18 +2,18 @@ import { NextRequest, NextResponse } from "next/server"
 
 
 export async function getWishlistItems() {
-    const res = await fetch('/api/wishlist')
+    const res = await fetch('/api/wishlist/item')
     if (!res.ok) throw new Error('Failed to fetch wishlist')
     return res.json()
 }
 
-export async function createWishlistItem(name: string, link?: string) {
-    const res = await fetch('/api/wishlist', {
+export async function createWishlistItem(name: string, wishlistId: string, link?: string) {
+    const res = await fetch('/api/wishlist/item', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, link }),
+        body: JSON.stringify({ name, link, wishlistId }),
     })
 
     if (!res.ok) throw new Error('Failed to create wishlist item')
@@ -21,7 +21,7 @@ export async function createWishlistItem(name: string, link?: string) {
 }
 
 export async function deleteWishlistItem(id: string) {
-    const res = await fetch('/api/wishlist', {
+    const res = await fetch('/api/wishlist/item', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
