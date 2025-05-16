@@ -22,10 +22,7 @@ export default async function WishlistPage() {
             items: true,
         },
     })
-
-    if (!wishlist) {
-        return <p className="p-8 text-red-500">No active wishlist found.</p>
-    }
+    
 
     return (
         <main className="p-8">

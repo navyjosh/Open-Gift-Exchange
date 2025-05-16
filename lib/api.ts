@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server"
+
 
 
 export async function getWishlistItems() {
@@ -32,3 +32,24 @@ export async function deleteWishlistItem(id: string) {
     if (!res.ok) throw new Error('Failed to delete wishlist item')
     return res.json()
 }
+
+export async function createNewWishlist(name: string) {
+    const res = await fetch('/api/wishlist/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+    })
+
+    if (!res.ok) throw new Error('Failed to create wishlist')
+    return res.json()
+}
+
+export async function deleteWishlist(id: string) {
+    const res = await fetch(`/api/wishlist/${id}`, {
+        method: 'DELETE',
+    })
+
+    if (!res.ok) throw new Error('Failed to delete wishlist')
+        return res.json()
+}
+

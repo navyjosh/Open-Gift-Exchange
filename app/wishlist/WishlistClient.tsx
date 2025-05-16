@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { createWishlistItem } from '@/lib/api'
+import { startTransition, useState, useTransition } from 'react'
+import { createNewWishlist, createWishlistItem } from '@/lib/api'
+import { useRouter } from 'next/navigation'
 
 interface WishlistItem {
     id: string
@@ -15,10 +16,24 @@ interface Wishlist {
     items: WishlistItem[]
 }
 
-export default function WishlistClient({ wishlist }: { wishlist: Wishlist }) {
-    const [items, setItems] = useState<WishlistItem[]>(wishlist.items)
+export default function WishlistClient({ wishlist }: { wishlist: Wishlist | null }) {
+    const [items, setItems] = useState<WishlistItem[]>(wishlist?.items ?? [])
     const [name, setName] = useState('')
     const [link, setLink] = useState('')
+    const [creating, startTransition] = useTransition()
+    const [error, setError] = useState<string | null>(null)
+    const router = useRouter()
+
+    const handleCreateWishlist = () => {
+        startTransition(async () => {
+            try {
+                await createNewWishlist()
+                router.refresh()
+            } catch (err) {
+                setError('Failed to create wishlist')
+            }
+        })
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -34,6 +49,21 @@ export default function WishlistClient({ wishlist }: { wishlist: Wishlist }) {
         }
     }
 
+    if (!wishlist) {
+        return (
+            <div className="text-center">
+                <p className="mb-4">You dont have a wishlist yet.</p>
+                <button
+                    onClick={handleCreateWishlist}
+                    disabled={creating}
+                    className="bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                    {creating ? 'Creating...' : 'Create My Wishlist'}
+                </button>
+                {error && <p className="text-red-500 mt-2">{error}</p>}
+            </div>
+        )
+    }
     return (
         <>
             <form onSubmit={handleSubmit} className="space-y-4 mb-6">
