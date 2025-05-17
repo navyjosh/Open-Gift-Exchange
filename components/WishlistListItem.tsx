@@ -26,7 +26,7 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
     const [expanded, setExpanded] = useState(false)
     const [deleting, startTransition] = useTransition()
     const [error, setError] = useState<string | null>(null)
-    const [showAddItemDialog, setShowAddItemDialog] = useState(false)
+
     const [newItemName, setNewItemName] = useState('')
     const [newItemLink, setNewItemLink] = useState('')
     const [items, setItems] = useState<WishlistItem[]>(initialItems)
@@ -52,7 +52,7 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
         try {
             const newItem = await createWishlistItem(newItemName, id, newItemLink)
             setItems([newItem, ...items])
-            setShowAddItemDialog(false)
+
             setNewItemName('')
             setNewItemLink('')
             console.log('Creating Item:', newItemName, newItemLink)
@@ -103,28 +103,51 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                         <li className="text-gray-500 italic text-sm">No items in this wishlist.</li>
                     ) : (
                         items.map((item) => (
-                            <li key={item.id} className="flex justify-between border p-2 rounded text-sm"><span>🎁</span>
-                                <p className="font-semibold">{item.name}</p>
-                                <span className='text-green-500 border-b-1'>$200</span>
-                                <div>
-                                    
-                                {item.link && (
-                                    <a
-                                        href={item.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-500 underline text-xs"
-                                    >
-                                        <LinkIcon className='h-4' />
-                                    </a>
-                                )}
-                                {!item.link && (
-                                    <LucideLink2Off className='h-4' />
-                                )}
+                            <li key={item.id} className="flex justify-between border p-2 rounded text-sm">
+                                <div className='space-x-4'>
+                                <span>🎁</span>
+                                <span className="font-semibold">{item.name}</span>
+                                </div>
+                                <div className='flex space-x-4 align-middle'>
+                                <span className='text-green-500'>$200</span>
+                                
+
+                                    {item.link && (
+                                        <a
+                                            href={item.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-500 underline text-xs"
+                                        >
+                                            <LinkIcon className='h-4' />
+                                        </a>
+                                    )}
+                                    {!item.link && (
+                                        <LucideLink2Off className='h-4' />
+                                    )}
                                 </div>
                             </li>
                         ))
                     )}
+                    <li className="border p-2 rounded text-sm flex flex-col gap-2">
+                        <form
+                            className="flex gap-2"
+                            onSubmit={(e) => {
+                                e.preventDefault()
+                                handleNewItemSubmit(e)
+                            }}
+                        >
+                            <input
+                                type="text"
+                                value={newItemName}
+                                onChange={(e) => setNewItemName(e.target.value)}
+                                placeholder="Item name"
+                                required
+                                className="border px-2 py-1 rounded text-sm dark:bg-gray-800 dark:text-white"
+                            />
+                            
+                        </form>
+                    </li>
                 </ul>
                 <AnimatePresence initial={false}>
                     {expanded && (
@@ -144,7 +167,7 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                                     type="button"
                                     onClick={(e) => {
                                         e.stopPropagation()
-                                        setShowAddItemDialog(true)
+
                                     }}
                                     title="Add Item"
                                     className="text-blue-600 hover:text-blue-800 flex items-center gap-1 text-sm"
@@ -157,50 +180,6 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                     )}
                 </AnimatePresence>
             </div>
-
-            <Dialog isOpen={showAddItemDialog} onClose={() => setShowAddItemDialog(false)} title="Add Item">
-                <form onSubmit={handleNewItemSubmit}>
-                    <input
-                        type="text"
-                        value={newItemName}
-                        onChange={(e) => setNewItemName(e.target.value)}
-                        placeholder="Item name"
-                        required
-                        className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white px-3 py-2 rounded mb-4"
-                    />
-                    <input
-                        type="url"
-                        value={newItemLink}
-                        onChange={(e) => setNewItemLink(e.target.value)}
-                        placeholder="https://"
-                        className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white px-3 py-2 rounded mb-4"
-                    />
-                    <div className="flex justify-end gap-4">
-                        <div className='flex flex-col items-center'>
-                            <button
-                                type="button"
-                                onClick={() => setShowAddItemDialog(false)}
-                                className="px-3 py-1 rounded border dark:border-gray-600"
-                            >
-                                Cancel
-                                <span className='text-xs text-gray-500 mt-1 ml-2'>[esc]</span>
-                            </button>
-
-                        </div>
-                        <div className='flex flex-col items-center'>
-                            <button
-                                type="submit"
-                                className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                            >
-                                Add
-                                <span className='text-s text-white mt-1 ml-2 font-extrabold'>↵</span>
-                            </button>
-
-                        </div>
-
-                    </div>
-                </form>
-            </Dialog>
         </li>
 
     )
