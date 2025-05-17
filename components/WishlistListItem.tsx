@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useTransition, useState } from 'react'
 import { deleteWishlist } from '@/lib/api'
-import { Trash2, Plus } from 'lucide-react'
+import { Trash2, Plus, PaperclipIcon, Paperclip, Link, Link2, Link2Icon, LinkIcon, Link2OffIcon, LucideLink2Off } from 'lucide-react'
 import { createWishlistItem } from '@/lib/api'
 import { Dialog } from '@/components/Dialog'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -103,8 +103,11 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                         <li className="text-gray-500 italic text-sm">No items in this wishlist.</li>
                     ) : (
                         items.map((item) => (
-                            <li key={item.id} className="border p-2 rounded text-sm">
+                            <li key={item.id} className="flex justify-between border p-2 rounded text-sm"><span>🎁</span>
                                 <p className="font-semibold">{item.name}</p>
+                                <span className='text-green-500 border-b-1'>$200</span>
+                                <div>
+                                    
                                 {item.link && (
                                     <a
                                         href={item.link}
@@ -112,9 +115,13 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                                         rel="noopener noreferrer"
                                         className="text-blue-500 underline text-xs"
                                     >
-                                        View Link
+                                        <LinkIcon className='h-4' />
                                     </a>
                                 )}
+                                {!item.link && (
+                                    <LucideLink2Off className='h-4' />
+                                )}
+                                </div>
                             </li>
                         ))
                     )}
