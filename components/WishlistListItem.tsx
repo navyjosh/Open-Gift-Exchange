@@ -64,7 +64,8 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
     }
 
     return (
-        <li className="border p-4 rounded">
+        <li className={`border rounded p-4 transition-colors ${expanded ? 'border-blue-500' : 'border-gray-300 hover:border-blue-400'
+            }`}>
             {/* Header Row */}
             <div
                 className="flex items-center justify-between w-full cursor-pointer"
@@ -82,18 +83,6 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                         type="button"
                         onClick={(e) => {
                             e.stopPropagation()
-                            setShowAddItemDialog(true)
-                        }}
-                        title="Add Item"
-                        className="text-blue-500 hover:text-blue-700"
-                    >
-                        <Plus className="w-4 h-4" />
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={(e) => {
-                            e.stopPropagation()
                             handleDelete(e)
                         }}
                         disabled={deleting}
@@ -102,8 +91,6 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                     >
                         <Trash2 className="w-4 h-4" />
                     </button>
-
-
                 </div>
             </div>
 
@@ -156,7 +143,7 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                                     className="text-blue-600 hover:text-blue-800 flex items-center gap-1 text-sm"
                                 >
                                     <Plus className="w-4 h-4" />
-                                    Add Item
+                                    🎁
                                 </button>
                             </div>
                         </motion.div>
@@ -191,7 +178,7 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                                 Cancel
                                 <span className='text-xs text-gray-500 mt-1 ml-2'>[esc]</span>
                             </button>
-                            
+
                         </div>
                         <div className='flex flex-col items-center'>
                             <button
@@ -201,7 +188,7 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                                 Add
                                 <span className='text-s text-white mt-1 ml-2 font-extrabold'>↵</span>
                             </button>
-                            
+
                         </div>
 
                     </div>
