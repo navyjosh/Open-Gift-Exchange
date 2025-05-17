@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import React from 'react'
 
 
@@ -12,7 +12,10 @@ interface DialogProps {
 }
 
 export function Dialog({ isOpen, onClose, title, children }: DialogProps) {
+const dialogRef = useRef<HTMLDivElement>(null)
+
     useEffect(() => {
+        // Close on escape
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
                 onClose()
@@ -20,6 +23,9 @@ export function Dialog({ isOpen, onClose, title, children }: DialogProps) {
         }
         if (isOpen) {
             window.addEventListener('keydown', handleKeyDown)
+
+            const firstInput = dialogRef.current?.querySelector('input')
+            firstInput?.focus()
         }
 
         return () => {
@@ -32,6 +38,7 @@ export function Dialog({ isOpen, onClose, title, children }: DialogProps) {
 
     return (
         <div
+            ref={dialogRef}
             className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
             onClick={onClose}
         >

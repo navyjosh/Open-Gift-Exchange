@@ -6,7 +6,7 @@ import { deleteWishlist } from '@/lib/api'
 import { Trash2, Plus } from 'lucide-react'
 import { createWishlistItem } from '@/lib/api'
 import { Dialog } from '@/components/Dialog'
-import {motion, AnimatePresence} from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface WishlistItem {
     id: string
@@ -103,7 +103,7 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                         <Trash2 className="w-4 h-4" />
                     </button>
 
-                    
+
                 </div>
             </div>
 
@@ -133,35 +133,35 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                     )}
                 </ul>
                 <AnimatePresence initial={false}>
-                        {expanded && (
-                            <motion.div
-                                key="expanded-content"
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: 'auto', opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.3 }}
-                                className="overflow-hidden"
-                            >
-                                
+                    {expanded && (
+                        <motion.div
+                            key="expanded-content"
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="overflow-hidden"
+                        >
 
-                                {/* ➕ Add Item button at bottom of list */}
-                                <div className="flex justify-end mt-4">
-                                    <button
-                                        type="button"
-                                        onClick={(e) => {
-                                            e.stopPropagation()
-                                            setShowAddItemDialog(true)
-                                        }}
-                                        title="Add Item"
-                                        className="text-blue-600 hover:text-blue-800 flex items-center gap-1 text-sm"
-                                    >
-                                        <Plus className="w-4 h-4" />
-                                        Add Item
-                                    </button>
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+
+                            {/* ➕ Add Item button at bottom of list */}
+                            <div className="flex justify-end mt-4">
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        setShowAddItemDialog(true)
+                                    }}
+                                    title="Add Item"
+                                    className="text-blue-600 hover:text-blue-800 flex items-center gap-1 text-sm"
+                                >
+                                    <Plus className="w-4 h-4" />
+                                    Add Item
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
 
             <Dialog isOpen={showAddItemDialog} onClose={() => setShowAddItemDialog(false)} title="Add Item">
@@ -178,23 +178,32 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                         type="url"
                         value={newItemLink}
                         onChange={(e) => setNewItemLink(e.target.value)}
-                        placeholder="Optional link"
+                        placeholder="https://"
                         className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white px-3 py-2 rounded mb-4"
                     />
-                    <div className="flex justify-end gap-2">
-                        <button
-                            type="button"
-                            onClick={() => setShowAddItemDialog(false)}
-                            className="px-3 py-1 rounded border dark:border-gray-600"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                        >
-                            Add
-                        </button>
+                    <div className="flex justify-end gap-4">
+                        <div className='flex flex-col items-center'>
+                            <button
+                                type="button"
+                                onClick={() => setShowAddItemDialog(false)}
+                                className="px-3 py-1 rounded border dark:border-gray-600"
+                            >
+                                Cancel
+                                <span className='text-xs text-gray-500 mt-1 ml-2'>[esc]</span>
+                            </button>
+                            
+                        </div>
+                        <div className='flex flex-col items-center'>
+                            <button
+                                type="submit"
+                                className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                            >
+                                Add
+                                <span className='text-s text-white mt-1 ml-2 font-extrabold'>↵</span>
+                            </button>
+                            
+                        </div>
+
                     </div>
                 </form>
             </Dialog>

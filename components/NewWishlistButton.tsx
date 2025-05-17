@@ -35,8 +35,8 @@ export function NewWishlistButton() {
             >
                 + New Wishlist
             </button>
-            <Dialog 
-                isOpen={open} 
+            <Dialog
+                isOpen={open}
                 onClose={() => setOpen(false)}
                 title='Create Wishlist'
             >
@@ -57,24 +57,30 @@ export function NewWishlistButton() {
 
                     {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
 
-                    <div className="flex justify-end gap-2">
-                        <button
-                            type="button"
-                            onClick={() => setOpen(false)}
-                            className="px-3 py-1 rounded border dark:border-gray-600"
-                        >
-                            Cancel
-                        </button>
+                    <div className="flex justify-end gap-4">
+                        <div className='flex flex-col items-center'>
+                            <button
+                                type="button"
+                                onClick={() => setOpen(false)}
+                                className="px-3 py-1 rounded border dark:border-gray-600"
+                            >
+                                Cancel
+                                <span className='text-xs text-gray-500 mt-1 ml-2'>[esc]</span>
+                            </button>
+                        </div>
+                        <div className='flex flex-col items-center'></div>
                         <button
                             type="submit"
                             disabled={pending || !name.trim()}
                             className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
                         >
                             {pending ? 'Creating...' : 'Create'}
+                            <span className='text-s text-white mt-1 ml-2 font-extrabold'>↵</span>
                         </button>
                     </div>
+
                 </form>
-            </Dialog>
+            </Dialog >
 
         </>
     )
