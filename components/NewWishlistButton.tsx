@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { createNewWishlist } from '@/lib/api'
 import { useRouter } from 'next/navigation'
+import { Dialog } from '@/components/Dialog'
 
 export function NewWishlistButton() {
     const router = useRouter()
@@ -34,49 +35,46 @@ export function NewWishlistButton() {
             >
                 + New Wishlist
             </button>
+            <Dialog 
+                isOpen={open} 
+                onClose={() => setOpen(false)}
+                title='Create Wishlist'
+            >
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        handleSubmit()
+                    }}
+                >
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Wishlist name"
+                        className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white px-3 py-2 rounded mb-4"
+                        autoFocus
+                    />
 
-            {open && (
-                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-                    <div className="bg-white text-black dark:bg-gray-900 dark:text-white p-6 rounded shadow-lg w-full max-w-sm">
-                        <h2 className="text-lg font-semibold mb-4">Create Wishlist</h2>
+                    {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
 
-                        <form
-                            onSubmit={(e) => {
-                                e.preventDefault()
-                                handleSubmit()
-                            }}
+                    <div className="flex justify-end gap-2">
+                        <button
+                            type="button"
+                            onClick={() => setOpen(false)}
+                            className="px-3 py-1 rounded border dark:border-gray-600"
                         >
-                            <input
-                                type="text"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                placeholder="Wishlist name"
-                                className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white px-3 py-2 rounded mb-4"
-                                autoFocus
-                            />
-
-                            {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-
-                            <div className="flex justify-end gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() => setOpen(false)}
-                                    className="px-3 py-1 rounded border dark:border-gray-600"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    disabled={pending || !name.trim()}
-                                    className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                                >
-                                    {pending ? 'Creating...' : 'Create'}
-                                </button>
-                            </div>
-                        </form>
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            disabled={pending || !name.trim()}
+                            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                        >
+                            {pending ? 'Creating...' : 'Create'}
+                        </button>
                     </div>
-                </div>
-            )}
+                </form>
+            </Dialog>
 
         </>
     )

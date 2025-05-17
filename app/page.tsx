@@ -21,6 +21,7 @@ export default async function Home() {
 
     return (
         <main className="p-8 max-w-xl mx-auto">
+
             <h1 className="text-2xl font-bold mb-6">
                 Welcome, {session.user.name ?? 'User'}
             </h1>
@@ -28,6 +29,7 @@ export default async function Home() {
                 <h2 className="text-lg font-semibold">Your Wishlists</h2>
                 <NewWishlistButton />
             </div>
+
             <ul className="space-y-4">
                 {wishlists.map((list) => (
                     <WishlistListItem
@@ -35,10 +37,11 @@ export default async function Home() {
                         id={list.id}
                         name={list.name}
                         isActive={list.isActive}
-                        items={list.items}                        
+                        items={list.items}
                     />
                 ))}
             </ul>
+
         </main>
     )
 }

@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation'
 import { useTransition, useState } from 'react'
 import { deleteWishlist } from '@/lib/api'
 import { Trash2, Plus } from 'lucide-react'
+import { createWishlistItem } from '@/lib/api'
+import { Dialog } from '@/components/Dialog'
+import {motion, AnimatePresence} from 'framer-motion'
 
 interface WishlistItem {
     id: string
@@ -18,14 +21,15 @@ interface WishlistListItemProps {
     items: WishlistItem[]
 }
 
-export function WishlistListItem({ id, name, isActive, items }: WishlistListItemProps) {
+export function WishlistListItem({ id, name, isActive, items: initialItems }: WishlistListItemProps) {
     const router = useRouter()
     const [expanded, setExpanded] = useState(false)
     const [deleting, startTransition] = useTransition()
     const [error, setError] = useState<string | null>(null)
-    const [showDialog, setShowDialog] = useState(false)
+    const [showAddItemDialog, setShowAddItemDialog] = useState(false)
     const [newItemName, setNewItemName] = useState('')
     const [newItemLink, setNewItemLink] = useState('')
+    const [items, setItems] = useState<WishlistItem[]>(initialItems)
 
     const handleDelete = (e: React.MouseEvent) => {
         e.stopPropagation()
@@ -43,43 +47,70 @@ export function WishlistListItem({ id, name, isActive, items }: WishlistListItem
 
     const handleNewItemSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        console.log('Creating Item:', newItemName, newItemLink)
-        setShowDialog(false)
-        setNewItemName('')
-        setNewItemLink('')
+        setError(null)
+
+        try {
+            const newItem = await createWishlistItem(newItemName, id, newItemLink)
+            setItems([newItem, ...items])
+            setShowAddItemDialog(false)
+            setNewItemName('')
+            setNewItemLink('')
+            console.log('Creating Item:', newItemName, newItemLink)
+        } catch (err) {
+            console.error("Failed to create item:", err)
+            setError('Failed to add item.')
+        }
+
     }
 
     return (
-        <li
-            className="border p-4 rounded flex items-center justify-between"
-            onClick={() => setExpanded(!expanded)}
-        >
-            <div className="flex justify-between items-center w-full">
+        <li className="border p-4 rounded">
+            {/* Header Row */}
+            <div
+                className="flex items-center justify-between w-full cursor-pointer"
+                onClick={() => setExpanded(!expanded)}
+            >
+                {/* left side */}
                 <div>
                     <p className="font-medium">{name}</p>
                     {isActive && <span className="text-green-600 text-sm">Active</span>}
                 </div>
 
+                {/* Right side */}
                 <div className="flex items-center gap-2">
                     <button
-                        onClick={() => setShowDialog(true)}
+                        type="button"
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            setShowAddItemDialog(true)
+                        }}
                         title="Add Item"
-                        className='text-blue-500 hover:text-blue-700'
+                        className="text-blue-500 hover:text-blue-700"
                     >
-                        <Plus className='w-4 h-4' />
+                        <Plus className="w-4 h-4" />
                     </button>
 
                     <button
-                        onClick={handleDelete}
+                        type="button"
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            handleDelete(e)
+                        }}
                         disabled={deleting}
                         title="Delete"
                         className="text-red-500 hover:text-red-700"
                     >
-                        <Trash2 className='w-4 h-4' />
+                        <Trash2 className="w-4 h-4" />
                     </button>
+
+                    
                 </div>
             </div>
-            {expanded && (
+
+            <div
+                className={`trasition-all overflow-hidden ${expanded ? 'max-h-[1000px] opacity-100 mt-4'
+                    : 'max-h-0 opacity-0'} duration-200 ease`}
+            >
                 <ul className="mt-4 space-y-2 border-t pt-4">
                     {items.length === 0 ? (
                         <li className="text-gray-500 italic text-sm">No items in this wishlist.</li>
@@ -101,50 +132,73 @@ export function WishlistListItem({ id, name, isActive, items }: WishlistListItem
                         ))
                     )}
                 </ul>
-            )}
-            {showDialog && (
-                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-                    <div
-                        className="bg-white text-black dark:bg-gray-900 dark:text-white p-6 rounded shadow-lg w-full max-w-sm"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <h2 className="text-lg font-semibold mb-4">Add Item</h2>
-                        <form onSubmit={handleNewItemSubmit}>
-                            <input
-                                type="text"
-                                value={newItemName}
-                                onChange={(e) => setNewItemName(e.target.value)}
-                                placeholder="Item name"
-                                required
-                                className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white px-3 py-2 rounded mb-4"
-                            />
-                            <input
-                                type="url"
-                                value={newItemLink}
-                                onChange={(e) => setNewItemLink(e.target.value)}
-                                placeholder="Optional link"
-                                className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white px-3 py-2 rounded mb-4"
-                            />
-                            <div className="flex justify-end gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowDialog(false)}
-                                    className="px-3 py-1 rounded border dark:border-gray-600"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                                >
-                                    Add
-                                </button>
-                            </div>
-                        </form>
+                <AnimatePresence initial={false}>
+                        {expanded && (
+                            <motion.div
+                                key="expanded-content"
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="overflow-hidden"
+                            >
+                                
+
+                                {/* ➕ Add Item button at bottom of list */}
+                                <div className="flex justify-end mt-4">
+                                    <button
+                                        type="button"
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            setShowAddItemDialog(true)
+                                        }}
+                                        title="Add Item"
+                                        className="text-blue-600 hover:text-blue-800 flex items-center gap-1 text-sm"
+                                    >
+                                        <Plus className="w-4 h-4" />
+                                        Add Item
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+            </div>
+
+            <Dialog isOpen={showAddItemDialog} onClose={() => setShowAddItemDialog(false)} title="Add Item">
+                <form onSubmit={handleNewItemSubmit}>
+                    <input
+                        type="text"
+                        value={newItemName}
+                        onChange={(e) => setNewItemName(e.target.value)}
+                        placeholder="Item name"
+                        required
+                        className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white px-3 py-2 rounded mb-4"
+                    />
+                    <input
+                        type="url"
+                        value={newItemLink}
+                        onChange={(e) => setNewItemLink(e.target.value)}
+                        placeholder="Optional link"
+                        className="w-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white px-3 py-2 rounded mb-4"
+                    />
+                    <div className="flex justify-end gap-2">
+                        <button
+                            type="button"
+                            onClick={() => setShowAddItemDialog(false)}
+                            className="px-3 py-1 rounded border dark:border-gray-600"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                        >
+                            Add
+                        </button>
                     </div>
-                </div>
-            )}
-            {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
+                </form>
+            </Dialog>
         </li>
+
     )
 }
