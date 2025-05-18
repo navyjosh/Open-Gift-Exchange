@@ -98,19 +98,19 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                 className={`trasition-all overflow-hidden ${expanded ? 'max-h-[1000px] opacity-100 mt-4'
                     : 'max-h-0 opacity-0'} duration-200 ease`}
             >
-                <ul className="mt-4 space-y-2 border-t pt-4">
+                <ul className="w-full mt-4 space-y-2 border-t pt-4 list-none">
                     {items.length === 0 ? (
                         <li className="text-gray-500 italic text-sm">No items in this wishlist.</li>
                     ) : (
                         items.map((item) => (
                             <li key={item.id} className="flex justify-between border p-2 rounded text-sm">
                                 <div className='space-x-4'>
-                                <span>🎁</span>
-                                <span className="font-semibold">{item.name}</span>
+                                    <span>🎁</span>
+                                    <span className="font-semibold">{item.name}</span>
                                 </div>
                                 <div className='flex space-x-4 align-middle'>
-                                <span className='text-green-500'>$200</span>
-                                
+                                    <span className='text-green-500'>$200</span>
+
 
                                     {item.link && (
                                         <a
@@ -129,14 +129,14 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                             </li>
                         ))
                     )}
-                    <li className="border p-2 rounded text-sm flex flex-col gap-2">
-                        <form
-                            className="flex gap-2"
-                            onSubmit={(e) => {
-                                e.preventDefault()
-                                handleNewItemSubmit(e)
-                            }}
-                        >
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault()
+                            handleNewItemSubmit(e)
+                        }}
+                    >
+                        <li className="border p-2 rounded flex flex-col gap-1">
+                            <label htmlFor="name" className="text-xs text-gray-500">Item name</label>
                             <input
                                 type="text"
                                 value={newItemName}
@@ -145,10 +145,24 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                                 required
                                 className="border px-2 py-1 rounded text-sm dark:bg-gray-800 dark:text-white"
                             />
-                            
-                        </form>
-                    </li>
+                            {newItemName.trim() !== '' && (
+                                <>
+                                    <label htmlFor="link" className="text-xs text-gray-500">Link (optional)</label>
+                                    <input
+                                        type="url"
+                                        value={newItemLink}
+                                        onChange={(e) => setNewItemLink(e.target.value)}
+                                        placeholder="https:// (optional link)"
+                                        className="border px-2 py-1 rounded text-sm dark:bg-gray-800 dark:text-white"
+                                    />
+                                </>
+                            )}
+                        </li>
+
+                        <button type="submit" className="hidden" aria-hidden="true" />
+                    </form>
                 </ul>
+
                 <AnimatePresence initial={false}>
                     {expanded && (
                         <motion.div
@@ -180,7 +194,7 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                     )}
                 </AnimatePresence>
             </div>
-        </li>
+        </li >
 
     )
 }
