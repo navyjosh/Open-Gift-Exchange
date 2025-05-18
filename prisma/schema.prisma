@@ -33,10 +33,13 @@ model WishlistItem {
   id         String   @id @default(cuid())
   name       String
   link       String?
+  price      Float?    // ✅ optional
+  notes      String?   // ✅ optional
   wishlistId String
   wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
 }
+
 
 model Account {
   id                String  @id @default(cuid())

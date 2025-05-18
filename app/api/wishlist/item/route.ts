@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export async function POST(req: NextRequest) {
-    const { name, link, wishlistId } = await req.json()
+    const { name, link, wishlistId, price, notes } = await req.json()
 
     if (!name || !wishlistId) {
         return NextResponse.json({ error: 'Name and wishlistId are required' }, { status: 400 })
@@ -16,6 +16,8 @@ export async function POST(req: NextRequest) {
                 name,
                 link,
                 wishlistId,
+                price: price ? parseFloat(price) : undefined,
+                notes,
             },
         })
 
