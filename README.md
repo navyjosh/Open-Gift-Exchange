@@ -16,18 +16,11 @@ Future goals:
 
 ---
 
-
-
 ## 🚀 Getting Started
 ⚠️ These setup instructions are still evolving. If you run into issues, please open an issue or PR — all feedback is welcome!
-### Postgres DB
-
 
 ### Google OAuth
 ⚠️ Authentication is still in early stages. This project currently is using Google's OAuth 2.0 as its only auth provider. You will need to set this up if you want to use this app as it stands. Feel free to contribute other authentication methods such as e-mail and password. Here's a [link to google support page](https://support.google.com/googleapi/answer/6158849?hl=en) on how to set this up. It only takes a few minutes.
-
-### Environment Variables
-
 
 ### 1. Stand up your PostgreSQL DB
 You will need a postgres db up and running to support the backend of this application. Here's a simple `docker-compose.yml` that will stand one up for dev environment.
