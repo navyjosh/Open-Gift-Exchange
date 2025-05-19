@@ -1,12 +1,15 @@
 'use client'
 
+import { useEffect } from 'react'
+import { useRef } from 'react'
+import { LucideLink2Off, LinkIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useTransition, useState } from 'react'
 import { deleteWishlist } from '@/lib/api'
-import { Trash2, Plus, PaperclipIcon, Paperclip, Link, Link2, Link2Icon, LinkIcon, Link2OffIcon, LucideLink2Off } from 'lucide-react'
 import { createWishlistItem } from '@/lib/api'
-import { Dialog } from '@/components/Dialog'
 import { motion, AnimatePresence } from 'framer-motion'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { MoreVertical } from 'lucide-react'
 
 interface WishlistItem {
     id: string
@@ -35,8 +38,10 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
     const [newItemNotes, setNewItemNotes] = useState('')
     const [items, setItems] = useState<WishlistItem[]>(initialItems)
 
-    const handleDelete = (e: React.MouseEvent) => {
-        e.stopPropagation()
+    const nameInputRef = useRef<HTMLInputElement>(null)
+    const prevExpandedRef = useRef(false)
+
+    const handleDelete = (name) => {
         if (!confirm(`Delete "${name}"?`)) return
 
         startTransition(async () => {
@@ -66,6 +71,13 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
         }
 
     }
+    useEffect(() => {
+        if (expanded && !prevExpandedRef.current) {
+            nameInputRef.current?.focus()
+        }
+
+        prevExpandedRef.current = expanded
+    }, [expanded])
 
     return (
         <li className={`border rounded p-4 transition-colors ${expanded ? 'border-blue-500' : 'border-gray-300 hover:border-blue-400'
@@ -83,18 +95,31 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
 
                 {/* Right side */}
                 <div className="flex items-center gap-2">
-                    <button
-                        type="button"
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            handleDelete(e)
-                        }}
-                        disabled={deleting}
-                        title="Delete"
-                        className="text-red-500 hover:text-red-700"
-                    >
-                        <Trash2 className="w-4 h-4" />
-                    </button>
+                    <DropdownMenu.Root>
+                        <DropdownMenu.Trigger asChild>
+                            <button
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-gray-500 hover:text-gray-700 p-2"
+                            >
+                                <MoreVertical className="w-4 h-4" />
+                            </button>
+                        </DropdownMenu.Trigger>
+
+                        <DropdownMenu.Portal>
+                            <DropdownMenu.Content
+                                sideOffset={4}
+                                className="z-50 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-md text-sm"
+                            >
+                                <DropdownMenu.Item
+                                    onSelect={() => handleDelete(name)}
+                                    className="px-3 py-2 hover:bg-red-100 dark:hover:bg-red-900 text-red-600 dark:text-red-400 cursor-pointer"
+                                >
+                                    Delete
+                                </DropdownMenu.Item>
+                            </DropdownMenu.Content>
+                        </DropdownMenu.Portal>
+                    </DropdownMenu.Root>
+
                 </div>
             </div>
 
@@ -143,6 +168,7 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                         <li className="border p-2 rounded flex flex-col gap-1">
                             <label htmlFor="name" className="text-xs text-gray-500">Item name</label>
                             <input
+                                ref={nameInputRef}
                                 type="text"
                                 value={newItemName}
                                 onChange={(e) => setNewItemName(e.target.value)}
@@ -187,13 +213,13 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                                         className="w-full border px-2 py-1 rounded text-sm dark:bg-gray-800 dark:text-white"
                                     />
                                     <div className='flex justify-end'>
-                                    <button
-                                        type="submit"
-                                        className="w-fit flex items-center gap-1 text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                                    >
-                                        Add
-                                        <span className="text-xs">↵</span>
-                                    </button>
+                                        <button
+                                            type="submit"
+                                            className="w-fit flex items-center gap-1 text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                                        >
+                                            Add
+                                            <span className="text-xs">↵</span>
+                                        </button>
                                     </div>
                                 </>
                             )}
@@ -213,23 +239,6 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                             transition={{ duration: 0.3 }}
                             className="overflow-hidden"
                         >
-
-
-                            {/* ➕ Add Item button at bottom of list */}
-                            <div className="flex justify-end mt-4">
-                                <button
-                                    type="button"
-                                    onClick={(e) => {
-                                        e.stopPropagation()
-
-                                    }}
-                                    title="Add Item"
-                                    className="text-blue-600 hover:text-blue-800 flex items-center gap-1 text-sm"
-                                >
-                                    <Plus className="w-4 h-4" />
-                                    🎁
-                                </button>
-                            </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
