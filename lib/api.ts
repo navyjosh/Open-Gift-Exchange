@@ -7,13 +7,19 @@ export async function getWishlistItems() {
     return res.json()
 }
 
-export async function createWishlistItem(name: string, wishlistId: string, link?: string) {
+export async function createWishlistItem(
+    name: string, 
+    wishlistId: string, 
+    link?: string,
+    price?: number,
+    notes?: string
+) {
     const res = await fetch('/api/wishlist/item', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, link, wishlistId }),
+        body: JSON.stringify({ name, link, wishlistId, price, notes }),
     })
 
     if (!res.ok) throw new Error('Failed to create wishlist item')

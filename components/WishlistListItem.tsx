@@ -12,6 +12,8 @@ interface WishlistItem {
     id: string
     name: string
     link?: string | null
+    price?: number | null
+    notes?: string | null
 }
 
 interface WishlistListItemProps {
@@ -29,6 +31,8 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
 
     const [newItemName, setNewItemName] = useState('')
     const [newItemLink, setNewItemLink] = useState('')
+    const [newItemPrice, setNewItemPrice] = useState('')
+    const [newItemNotes, setNewItemNotes] = useState('')
     const [items, setItems] = useState<WishlistItem[]>(initialItems)
 
     const handleDelete = (e: React.MouseEvent) => {
@@ -50,7 +54,7 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
         setError(null)
 
         try {
-            const newItem = await createWishlistItem(newItemName, id, newItemLink)
+            const newItem = await createWishlistItem(newItemName, id, newItemLink, parseFloat(newItemPrice), newItemNotes)
             setItems([newItem, ...items])
 
             setNewItemName('')
@@ -109,8 +113,9 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                                     <span className="font-semibold">{item.name}</span>
                                 </div>
                                 <div className='flex space-x-4 align-middle'>
-                                    <span className='text-green-500'>$200</span>
-
+                                    {item.price && (
+                                        <span className='text-green-500'>${item.price.toFixed(2)}</span>
+                                    )}
 
                                     {item.link && (
                                         <a
@@ -155,6 +160,41 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                                         placeholder="https:// (optional link)"
                                         className="border px-2 py-1 rounded text-sm dark:bg-gray-800 dark:text-white"
                                     />
+
+                                    <label htmlFor={`price-${id}`} className="text-xs text-gray-500">Price (optional)</label>
+                                    <input
+                                        id={`price-${id}`}
+                                        type="number"
+                                        step="0.01"
+                                        value={newItemPrice}
+                                        onChange={(e) => setNewItemPrice(e.target.value)}
+                                        placeholder="$0.00"
+                                        className="w-full border px-2 py-1 rounded text-sm dark:bg-gray-800 dark:text-white"
+                                    />
+
+                                    <label htmlFor={`notes-${id}`} className="text-xs text-gray-500">Notes (optional)</label>
+                                    <textarea
+                                        id={`notes-${id}`}
+                                        value={newItemNotes}
+                                        onChange={(e) => setNewItemNotes(e.target.value)}
+                                        placeholder="e.g. Color, size, store..."
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && e.ctrlKey) {
+                                                e.preventDefault()
+                                                handleNewItemSubmit(e)
+                                            }
+                                        }}
+                                        className="w-full border px-2 py-1 rounded text-sm dark:bg-gray-800 dark:text-white"
+                                    />
+                                    <div className='flex justify-end'>
+                                    <button
+                                        type="submit"
+                                        className="w-fit flex items-center gap-1 text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                                    >
+                                        Add
+                                        <span className="text-xs">↵</span>
+                                    </button>
+                                    </div>
                                 </>
                             )}
                         </li>
