@@ -45,7 +45,9 @@ volumes:
   postgres_data:
 ```
 Once you've created this file (I recommend creating this outside of the project directory) run the following command:
-`docker-compose up -d`
+```bash
+docker compose up -d
+```
 
 ### 3. Clone the Repo
 ```bash
