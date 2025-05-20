@@ -1,11 +1,12 @@
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import { PrismaClient } from '@prisma/client'
+
 import GoogleProvider from 'next-auth/providers/google'
 import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcrypt'
+import { prisma } from '@/lib/prisma'
 
-const prisma = new PrismaClient()
+// const prisma = new PrismaClient()
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(prisma),
@@ -15,33 +16,49 @@ export const authOptions: NextAuthOptions = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         }),
         CredentialsProvider({
-            name: "Credentials",
+            id: "credentials",
+            name: "credentials",
             credentials: {
                 email: { label: "Email", type: "email" },
-                password: {label: "Password", type: "password"}
+                password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                const { email, password } = credentials as {email: string; password: string}
-                const user = await prisma.user.findUnique({ where: {email} })
 
-                if (!user || !user.hashedPassword) return null
+                const { email, password } = credentials as { email: string; password: string }
+                const user = await prisma.user.findUnique({ where: { email } })
+
+                if (!user || !user.hashedPassword) {
+
+                    return null
+                }
 
                 const isValid = await bcrypt.compare(password, user.hashedPassword)
-                if (!isValid) return null
+                if (!isValid) {
 
-                return {id: user.id, email: user.email, name: user.name}
+                    return null
+                }
+
+                return { id: user.id, email: user.email, name: user.name }
             }
         })
     ],
     session: {
-        strategy: 'database',
+        strategy: 'jwt',
     },
     callbacks: {
-        async session({ session, user }) {
-            return {
-                ...session,
-                user: { ...session.user, id: user.id },
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id
+                token.email = user.email
+                token.name = user.name
             }
+            return token
+        },
+        async session({ session, token }) {
+            session.user.id = token.id as string
+            session.user.email = token.email as string
+            session.user.name = token.name as string
+            return session
         },
     },
     secret: process.env.NEXTAUTH_SECRET,

@@ -23,6 +23,14 @@ export async function POST(req: NextRequest) {
             hashedPassword,
         },
     })
+    await prisma.account.create({
+        data: {
+            userId: user.id,
+            type: 'credentials',
+            provider: 'credentials',
+            providerAccountId: user.email,
+        },
+    })
 
     return NextResponse.json({ id: user.id, email: user.email })
 }

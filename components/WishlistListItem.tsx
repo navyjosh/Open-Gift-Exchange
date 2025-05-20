@@ -64,9 +64,9 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
 
             setNewItemName('')
             setNewItemLink('')
-            console.log('Creating Item:', newItemName, newItemLink)
+            
         } catch (err) {
-            console.error("Failed to create item:", err)
+            
             setError('Failed to add item.')
         }
 
