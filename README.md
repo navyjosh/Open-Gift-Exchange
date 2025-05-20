@@ -67,7 +67,7 @@ Open `.env.example` and provide the following configuration:
 4. **NEXTAUTH_SECRET**: This should be a secure random string. You can generate one like this: `openssl rand -base64 32`
 5. Copy it to `.env`:
 ```bash
-cp .env.example .env
+cp example.env .env
 ```
 
 ### 6. Migrate schema to your db
