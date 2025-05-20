@@ -1,9 +1,10 @@
+import { Providers } from "./providers";
+import { AuthButtons } from "@/components/AuthButtons";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import "./globals.css";
 import Link from 'next/link'
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,45 +21,27 @@ export const metadata: Metadata = {
   description: "A simple wishlist / gift exchange webapp.",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-    const session = await getServerSession(authOptions)
-  return (    
+
+
+  return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white`}>
-        <header className="flex items-center justify-between px-6 py-4 border-b">
-          <h1 className="text-xl font-bold">
-            <Link href="/">Wishlist</Link>
-          </h1>
-
-          {session?.user ? (
-            <form
-              action="/api/auth/signout"
-              method="POST"
-              className="ml-auto"
-            >
-              <input type="hidden" name="callbackUrl" value="/" />
-              <button
-                type="submit"
-                className="text-sm text-red-600 hover:underline"
-              >
-                Log out
-              </button>
-            </form>
-          ) : (
-            <Link
-              href="/auth/signin"
-              className="text-sm text-blue-600 hover:underline ml-auto"
-            >
-              Sign in
-            </Link>
-          )}
-        </header>
-
-        <main className="px-6 py-4">{children}</main>
+        <Providers>
+          <header className="flex items-center justify-between px-6 py-4 border-b">
+            <h1 className="text-xl font-bold">
+              <Link href="/">Wishlist</Link>
+            </h1>
+            <AuthButtons />
+          </header>
+          <main className="px-6 py-4">
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );
