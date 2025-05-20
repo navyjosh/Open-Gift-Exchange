@@ -22,7 +22,7 @@ Future goals:
 ### 1. Google OAuth
 ⚠️ Authentication is still in early stages.  
 
-This project currently is using Google's OAuth 2.0. You will need to set this up if you want to use this app as it stands. Feel free to contribute other authentication methods such as e-mail and password. Here's a [link to google support page](https://support.google.com/googleapi/answer/6158849?hl=en) on how to set this up. It only takes a few minutes.
+This project currently supports credential authentication through NextAuth as well as Google's OAuth 2.0. Here's a [link to google support page](https://support.google.com/googleapi/answer/6158849?hl=en) on how to set this up. 
 
 ### 2. Stand up your PostgreSQL DB
 You will need a postgres db up and running to support the backend of this application. Here's a simple `docker-compose.yml` that will stand one up for dev environment.
@@ -63,8 +63,9 @@ npm install
 Open `.env.example` and provide the following configuration:
 1. **DATABASE_URL**: the PostgreSQL connection string
 2. **GOOGLE_CLIENT_ID** & **GOOGLE_CLIENT_SECRET**: You'll get these when you set up your Google Oauth 2.0 provider
-3. **NEXTAUTH_SECRET**: This should be a secure random string. You can generate one like this: `openssl rand -base64 32`
-4. Copy it to `.env`:
+3. **NEXT_PUBLIC_GOOGLE_AUTH_ENABLED**: set this to `true` if you're using Google Auth
+4. **NEXTAUTH_SECRET**: This should be a secure random string. You can generate one like this: `openssl rand -base64 32`
+5. Copy it to `.env`:
 ```bash
 cp .env.example .env
 ```
