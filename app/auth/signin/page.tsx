@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 
 export default function SignInPage() {
@@ -11,6 +12,8 @@ export default function SignInPage() {
     const [error, setError] = useState('')
     const router = useRouter()
     const [showGoogle, setShowGoogle] = useState(false)
+    const searchParams = useSearchParams()
+    const callbackUrl = searchParams.get('callbackUrl') || '/'
 
     useEffect(() => {
         setShowGoogle(process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === 'true')
@@ -45,7 +48,7 @@ export default function SignInPage() {
                         src="/images/signin-assets/google-svg/light/web_light_rd_SI.svg"
                         alt="Sign in with Google"
                         className="block dark:hidden max-w-xs mx-auto cursor-pointer"
-                        onClick={() => signIn('google', {callbackUrl: '/'})}
+                        onClick={() => signIn('google', { callbackUrl })}
                     />
 
                     {/* Dark mode image */}
@@ -55,16 +58,16 @@ export default function SignInPage() {
                         src="/images/signin-assets/google-svg/dark/web_dark_rd_SI.svg"
                         alt="Sign in with Google"
                         className="hidden dark:block max-w-xs mx-auto cursor-pointer"
-                        onClick={() => signIn('google', {callbackUrl: '/'})}
+                        onClick={() => signIn('google', { callbackUrl })}
                     />
                 </div>
 
             )}
-<div className="flex w-full items-center gap-2 py-6 text-sm text-slate-600">
-                    <div className="h-px w-full bg-slate-200"></div>
-                    OR
-                    <div className="h-px w-full bg-slate-200"></div>
-                </div>
+            <div className="flex w-full items-center gap-2 py-6 text-sm text-slate-600">
+                <div className="h-px w-full bg-slate-200"></div>
+                OR
+                <div className="h-px w-full bg-slate-200"></div>
+            </div>
 
             <form onSubmit={handleSubmit} className="mt-4">
                 <input
