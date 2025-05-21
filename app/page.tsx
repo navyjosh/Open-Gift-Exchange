@@ -1,47 +1,28 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
-import { redirect } from "next/navigation"
-import { PrismaClient } from "@prisma/client"
+// app/page.tsx
 import Link from 'next/link'
-import { requireSession } from "@/lib/auth/session"
-import { NewWishlistButton } from "../components/NewWishlistButton"
-import { WishlistListItem } from "@/components/WishlistListItem"
 
-const prisma = new PrismaClient()
-
-export default async function Home() {
-    const session = await requireSession()
-    const wishlists = await prisma.wishlist.findMany({
-        where: { userId: session.user.id },
-        orderBy: { createdAt: 'desc' },
-        include: {
-            items: true,
-        }
-    })
-
+export default function HomePage() {
     return (
-        <main className="p-8 max-w-xl mx-auto">
+        <div className="flex flex-col items-center justify-center text-center mt-20 space-y-6">
+            <h1 className="text-4xl font-bold">🎁 Welcome to Wishlist</h1>
+            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-xl">
+                Create wishlists, share gift ideas, and organize gift exchanges with friends, family, or coworkers.
+            </p>
 
-            <h1 className="text-2xl font-bold mb-6">
-                Welcome, {session.user.name ?? 'User'}
-            </h1>
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Your Wishlists</h2>
-                <NewWishlistButton />
+            <div className="flex gap-4">
+                <Link
+                    href="/wishlists"
+                    className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+                >
+                    View My Wishlists
+                </Link>
+                <Link
+                    href="/auth/signup"
+                    className="text-blue-600 underline hover:text-blue-800"
+                >
+                    Sign up
+                </Link>
             </div>
-
-            <ul className="space-y-4">
-                {wishlists.map((list) => (
-                    <WishlistListItem
-                        key={list.id}
-                        id={list.id}
-                        name={list.name}
-                        isActive={list.isActive}
-                        items={list.items}
-                    />
-                ))}
-            </ul>
-
-        </main>
+        </div>
     )
 }

@@ -8,8 +8,8 @@ export async function getWishlistItems() {
 }
 
 export async function createWishlistItem(
-    name: string, 
-    wishlistId: string, 
+    name: string,
+    wishlistId: string,
     link?: string,
     price?: number,
     notes?: string
@@ -56,6 +56,28 @@ export async function deleteWishlist(id: string) {
     })
 
     if (!res.ok) throw new Error('Failed to delete wishlist')
-        return res.json()
+    return res.json()
 }
 
+export async function createGiftExchange(data: {
+    name: string
+    description?: string
+    maxSpend?: number
+    date?: string
+    time?: string
+    address?: string
+}) {
+    const res = await fetch('/api/gift-exchange', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+
+    if (!res.ok) {
+        throw new Error('Failed to create gift exchange')
+    }
+
+    return res.json()
+}
