@@ -65,9 +65,9 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
             setNewItemName('')
             setNewItemLink('')
             nameInputRef.current?.focus()
-            
+
         } catch (err) {
-            
+
             setError('Failed to add item.')
         }
 
