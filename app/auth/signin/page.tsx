@@ -21,15 +21,22 @@ export default function SignInPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        console.log('submit')
         const res = await signIn('credentials', {
             redirect: false,
             email,
             password,
+            callbackUrl,
         })
 
         if (res?.error) {
+            console.log('1')
             setError('Invalid credentials')
+        } else if (res?.url) {
+            console.log(`2: ${res.url}`)
+            router.push( res.url)
         } else {
+            console.log('3')
             router.push('/')
         }
 
