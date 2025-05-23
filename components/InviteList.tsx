@@ -6,7 +6,7 @@ import { useTransition } from 'react'
 interface Invite {
     id: string
     email: string
-    status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED'
+    status: 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'EXPIRED'
     createdAt: string
 }
 
@@ -17,20 +17,7 @@ interface InviteListProps {
     }
 }
 
-const getStatusEmoji = (status: Invite['status']) => {
-    switch (status) {
-        case 'ACCEPTED':
-            return '<span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">Pending</span>'
-        case 'PENDING':
-            return '⏳ Pending'
-        case 'REJECTED':
-            return '❌ Rejected'
-        case 'EXPIRED':
-            return '💀 Expired'
-        default:
-            return ''
-    }
-}
+
 
 export function InviteList({ exchange }: InviteListProps) {
     const [invites, setInvites] = useState<Invite[]>(exchange.invites)
@@ -52,12 +39,12 @@ export function InviteList({ exchange }: InviteListProps) {
                 })
                 const data = await res.json()
 
-                if (!res.ok) {                    
+                if (!res.ok) {
                     setError(data?.error || 'Failed to send invite')
                     return
                 }
 
-                setEmail('')                
+                setEmail('')
                 setInvites((prev) => [...prev, data.invite])
                 console.log(`invites: ${invites}`)
             } catch (err) {
@@ -68,7 +55,7 @@ export function InviteList({ exchange }: InviteListProps) {
     }
 
     return (
-        <>            
+        <>
             <div className="mt-4">
                 <p className="font-semibold text-sm mb-1">Invitations:</p>
                 {invites.length === 0 ? (
@@ -77,7 +64,21 @@ export function InviteList({ exchange }: InviteListProps) {
                     <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
                         {invites.map((invite) => (
                             <li key={invite.id}>
-                                {getStatusEmoji(invite.status)} {invite.email}
+                                <span className='inline-block w-24'>
+                                    {invite.status === 'PENDING' && (
+                                        <span className="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-yellow-900 dark:text-yellow-300">Pending</span>
+                                    )}
+                                    {invite.status === 'ACCEPTED' && (
+                                        <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-green-900 dark:text-green-300">Accepted</span>
+                                    )}
+                                    {invite.status === 'DECLINED' && (
+                                        <span className="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-red-900 dark:text-red-300">Declined</span>
+                                    )}
+                                    {invite.status === 'EXPIRED' && (
+                                        <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-gray-300">Expired</span>
+                                    )}
+                                </span>
+                                {invite.email}
                             </li>
                         ))}
                     </ul>

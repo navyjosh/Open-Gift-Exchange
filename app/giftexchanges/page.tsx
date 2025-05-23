@@ -20,6 +20,7 @@ export default async function GiftExchangesPage() {
                 },
             },
             invites: {
+                orderBy: {status: 'asc'},
                 select: {id: true, email: true, createdAt: true, status: true}                
             }
         },
