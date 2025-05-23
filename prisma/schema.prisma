@@ -87,7 +87,7 @@ model GiftExchange {
   description String?
   maxSpend    Float?
   date        DateTime?
-  time        String? // e.g. "6:00 PM"
+  time        String? 
   address     String?
 
   createdAt DateTime @default(now())
@@ -115,7 +115,7 @@ model GiftExchangeMember {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([userId, giftExchangeId]) // prevent duplicate memberships
+  @@unique([userId, giftExchangeId]) 
 }
 
 model Invite {
@@ -130,7 +130,7 @@ model Invite {
   createdAt  DateTime     @default(now())
   acceptedAt DateTime?
 
-  @@unique([email, exchangeId]) // ✅ Prevent duplicate invites to same exchange
+  @@unique([email, exchangeId]) 
 }
 
 enum InviteStatus {
