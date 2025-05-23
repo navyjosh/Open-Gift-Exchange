@@ -7,6 +7,7 @@ import { useTransition } from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ExpandableCard } from "@/components/ExpandableCard"
+import { InviteList } from "@/components/InviteList"
 
 export default function GiftExchangeList(
     { exchanges, userId }:
@@ -17,6 +18,8 @@ export default function GiftExchangeList(
     const router = useRouter()
     const [deleting, startTransition] = useTransition()
     const [error, setError] = useState<string | null>(null)
+    
+
     function handleDelete(name: string, id: string): void {
         if (!confirm(`Delete "${name}"?`)) return
 
@@ -29,6 +32,7 @@ export default function GiftExchangeList(
             }
         })
     }
+
 
     return (
         <div className="space-y-6">
@@ -108,6 +112,12 @@ export default function GiftExchangeList(
                                         {currentUser?.role === 'ADMIN' ? 'Admin' : 'Member'}
                                     </p>
                                 </div>
+                                {isAdmin && (
+                                    <InviteList exchange={exchange} />
+                                )}
+
+                                {/* {isAdmin && <InviteForm exchangeId={exchange.id} />} */}
+
 
                             </ExpandableCard>
                         )

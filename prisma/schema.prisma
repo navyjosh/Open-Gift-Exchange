@@ -94,7 +94,7 @@ model GiftExchange {
   updatedAt DateTime @updatedAt
 
   members GiftExchangeMember[]
-  Invite  Invite[]
+  invites  Invite[]
 }
 
 enum Role {
@@ -129,6 +129,8 @@ model Invite {
   status     InviteStatus @default(PENDING)
   createdAt  DateTime     @default(now())
   acceptedAt DateTime?
+
+  @@unique([email, exchangeId]) // ✅ Prevent duplicate invites to same exchange
 }
 
 enum InviteStatus {

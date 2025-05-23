@@ -19,6 +19,9 @@ export default async function GiftExchangesPage() {
                     role: true,
                 },
             },
+            invites: {
+                select: {id: true, email: true, createdAt: true, status: true}                
+            }
         },
     })
 
