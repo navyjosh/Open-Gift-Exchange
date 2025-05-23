@@ -52,7 +52,7 @@ export default function SignInPage() {
                         src="/images/signin-assets/google-svg/light/web_light_rd_SI.svg"
                         alt="Sign in with Google"
                         className="block dark:hidden max-w-xs mx-auto cursor-pointer"
-                        onClick={() => signIn('google', { callbackUrl })}
+                        onClick={() => signIn('google', {callbackUrl: '/wishlists'})}
                     />
 
                     {/* Dark mode image */}
@@ -62,7 +62,7 @@ export default function SignInPage() {
                         src="/images/signin-assets/google-svg/dark/web_dark_rd_SI.svg"
                         alt="Sign in with Google"
                         className="hidden dark:block max-w-xs mx-auto cursor-pointer"
-                        onClick={() => signIn('google', { callbackUrl })}
+                        onClick={() => signIn('google', { callbackUrl: '/wishlists' })}
                     />
                 </div>
 
