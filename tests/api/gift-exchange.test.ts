@@ -20,7 +20,7 @@ jest.mock('@/lib/prisma', () => ({
     },
 }))
 
-describe('POST /api/gift-exchange', () => {
+describe('POST /api/giftexchange', () => {
     it('creates a new gift exchange and returns it', async () => {
         const body = {
             name: 'Holiday Gift Swap',
@@ -30,12 +30,6 @@ describe('POST /api/gift-exchange', () => {
             time: '6:00 PM',
             address: '123 Festive Lane',
         }
-
-        // const req = new Request('http://localhost/api/gift-exchange', {
-        //     method: 'POST',
-        //     body: JSON.stringify(body),
-        //     headers: { 'Content-Type': 'application/json' },
-        // })
 
         const mockExchange = {
             id: 'exchange123',
@@ -62,7 +56,7 @@ describe('POST /api/gift-exchange', () => {
 
         createMock.mockResolvedValue(mockExchange)
 
-        const req = new NextRequest('http://localhost/api/gift-exchange', {
+        const req = new NextRequest('http://localhost/api/giftexchange', {
             method: 'POST',
             body: JSON.stringify({
                 name: 'Holiday Gift Swap',

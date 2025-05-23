@@ -76,7 +76,7 @@ export async function createGiftExchange(data: {
     time?: string
     address?: string
 }) {
-    const res = await fetch('/api/gift-exchange', {
+    const res = await fetch('/api/giftexchange', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
