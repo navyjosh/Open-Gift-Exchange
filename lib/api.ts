@@ -26,8 +26,8 @@ export async function createWishlistItem(
     return res.json()
 }
 
-export async function deleteWishlistItem(id: string) {
-    const res = await fetch('/api/wishlist/item', {
+export async function deleteItem(id: string) {
+    const res = await fetch(`/api/wishlist/item/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
