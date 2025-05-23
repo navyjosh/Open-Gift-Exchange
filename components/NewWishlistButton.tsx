@@ -9,7 +9,7 @@ export function NewWishlistButton() {
     const router = useRouter()
     const [open, setOpen] = useState(false)
     const [name, setName] = useState('')
-    const [error, setError] = useState<string | null>(null)
+    const [newWishlistError, setNewWishlistError] = useState<string | null>(null)
     const [pending, startTransition] = useTransition()
 
     const handleSubmit = () => {
@@ -22,9 +22,9 @@ export function NewWishlistButton() {
                 router.refresh()
             } catch (err) {
                 if(err instanceof Error){
-                    setError(err.message)
+                    setNewWishlistError(err.message)
                 } else {
-                    setError("Something went wrong.")
+                    setNewWishlistError("Something went wrong.")
                 }
             }
         })
@@ -34,7 +34,7 @@ export function NewWishlistButton() {
         <>
             <button
                 onClick={() => {
-                    setError('')
+                    setNewWishlistError('')
                     setOpen(true)
                 }}
                 className="bg-blue-600 text-white px-3 py-1 rounded text-sm"
@@ -61,7 +61,7 @@ export function NewWishlistButton() {
                         autoFocus
                     />
 
-                    {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+                    {newWishlistError && <p className="text-red-500 text-sm mb-2">{newWishlistError}</p>}
 
                     <div className="flex justify-end gap-4">
                         <div className='flex flex-col items-center'>
