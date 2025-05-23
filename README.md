@@ -16,7 +16,7 @@ Future goals:
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Setting up Dev Environment
 ⚠️ These setup instructions are still evolving. If you run into issues, please open an issue or PR — all feedback is welcome!
 
 ### 1. Google OAuth
