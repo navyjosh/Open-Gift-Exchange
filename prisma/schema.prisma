@@ -38,8 +38,8 @@ model WishlistItem {
   id         String   @id @default(cuid())
   name       String
   link       String?
-  price      Float? 
-  notes      String? 
+  price      Float?
+  notes      String?
   wishlistId String
   wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
@@ -92,7 +92,7 @@ model GiftExchange {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  members GiftExchangeMember[]  
+  members GiftExchangeMember[]
 }
 
 enum Role {
@@ -101,17 +101,17 @@ enum Role {
 }
 
 model GiftExchangeMember {
-  id             String         @id @default(uuid())
-  user           User           @relation(fields: [userId], references: [id])
-  userId         String
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
-  giftExchange   GiftExchange   @relation(fields: [giftExchangeId], references: [id], onDelete: Cascade)
+  giftExchange   GiftExchange @relation(fields: [giftExchangeId], references: [id], onDelete: Cascade)
   giftExchangeId String
 
-  role           Role           @default(MEMBER)
+  role Role @default(MEMBER)
 
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([userId, giftExchangeId]) // prevent duplicate memberships
 }
