@@ -73,11 +73,11 @@ export async function deleteGiftExchange(id: string) {
 
 export async function createGiftExchange(data: {
     name: string
-    description?: string
-    maxSpend?: number
-    date?: string
-    time?: string
-    address?: string
+    description: string | null
+    maxSpend: number | null
+    date: Date | null
+    time: string | null
+    address: string | null
 }) {
     const res = await fetch('/api/giftexchange', {
         method: 'POST',

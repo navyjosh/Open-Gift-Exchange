@@ -51,7 +51,7 @@ export default function GiftExchangeList(
                                 header={
                                     <>
                                         <p className="font-medium">{exchange.name}</p>
-                                        <span className="text-sm text-gray-500">{exchange.date}</span>
+                                        <span className="text-sm text-gray-500">  {exchange.date ? new Date(exchange.date).toLocaleDateString() : ''}</span>
                                         <div className="flex items-center gap-2">
                                             <DropDownMenu.Root>
                                                 <DropDownMenu.Trigger asChild>
