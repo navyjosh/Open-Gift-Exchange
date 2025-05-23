@@ -138,13 +138,12 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                     <li className="text-gray-500 italic text-sm">No items yet.</li>
                 ) : (
                     items.map((item) => (
-                        <li key={item.id} className="flex justify-between border p-2 rounded text-sm">
+                        <li key={item.id} className="flex items-center justify-between border p-2 rounded text-sm">
                             <div className="space-x-2">
                                 <span>🎁</span>
                                 <span className="font-semibold">{item.name}</span>
                             </div>
                             <div className="flex items-center space-x-2">
-
                                 {item.price && <span className="text-green-500">${item.price.toFixed(2)}</span>}
                                 {item.link ? (
                                     <a
@@ -159,7 +158,7 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
                                     <LucideLink2Off className="h-4" />
                                 )}
 
-                                <div className="flex items-center gap-2">
+                                <div className="flex gap-2">
                                     <DropdownMenu.Root>
                                         <DropdownMenu.Trigger asChild>
                                             <button
