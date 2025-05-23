@@ -122,7 +122,7 @@ model Invite {
   id         String       @id @default(cuid())
   token      String       @unique
   email      String
-  exchange   GiftExchange @relation(fields: [exchangeId], references: [id])
+  exchange   GiftExchange @relation(fields: [exchangeId], references: [id], onDelete: Cascade)
   exchangeId String
   user       User?        @relation(fields: [userId], references: [id])
   userId     String?
