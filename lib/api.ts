@@ -45,9 +45,12 @@ export async function createNewWishlist(name: string) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name }),
     })
+    const data = await res.json()
 
-    if (!res.ok) throw new Error('Failed to create wishlist')
-    return res.json()
+    if (!res.ok) {
+        throw new Error(data.error || 'Failed to create wishlist')
+    }
+    return data
 }
 
 export async function deleteWishlist(id: string) {

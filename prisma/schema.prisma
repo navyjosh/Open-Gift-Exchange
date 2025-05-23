@@ -30,6 +30,8 @@ model Wishlist {
   isActive  Boolean        @default(false)
   items     WishlistItem[]
   createdAt DateTime       @default(now())
+
+  @@unique([userId, name])
 }
 
 model WishlistItem {
