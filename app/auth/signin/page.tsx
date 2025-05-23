@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 
 export default function SignInPage() {
@@ -12,8 +11,6 @@ export default function SignInPage() {
     const [error, setError] = useState('')
     const router = useRouter()
     const [showGoogle, setShowGoogle] = useState(false)
-    const searchParams = useSearchParams()
-    const callbackUrl = searchParams.get('callbackUrl') || '/'
 
     useEffect(() => {
         setShowGoogle(process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === 'true')
@@ -21,12 +18,12 @@ export default function SignInPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        console.log('submit')
+
         const res = await signIn('credentials', {
             redirect: false,
             email,
             password,
-            callbackUrl,
+            callbackUrl: '/wishlists'
         })
 
         if (res?.error) {
@@ -34,7 +31,7 @@ export default function SignInPage() {
             setError('Invalid credentials')
         } else if (res?.url) {
             console.log(`2: ${res.url}`)
-            router.push( res.url)
+            router.push(res.url)
         } else {
             console.log('3')
             router.push('/')
