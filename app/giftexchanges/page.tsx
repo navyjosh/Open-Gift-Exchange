@@ -14,11 +14,12 @@ export default async function GiftExchangesPage() {
         },
         include: {
             members: {
-                where: { userId: session.user.id },
-                select: { role: true },
+                select: {
+                    userId: true,
+                    role: true,
+                },
             },
         },
-        orderBy: { createdAt: 'desc' },
     })
 
     return (
@@ -33,7 +34,7 @@ export default async function GiftExchangesPage() {
             </div>
 
             <ul className="space-y-4">
-                <GiftExchangeList exchanges={exchanges} />
+                <GiftExchangeList exchanges={exchanges} userId={session.user.id} />
             </ul>
         </main>
     )
