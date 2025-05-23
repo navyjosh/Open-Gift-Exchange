@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { POST } from '@/app/api/gift-exchange/route'
+import { POST } from '@/app/api/giftexchange/route'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { PrismaClient } from '@prisma/client'

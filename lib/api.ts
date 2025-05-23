@@ -59,6 +59,15 @@ export async function deleteWishlist(id: string) {
     return res.json()
 }
 
+export async function deleteGiftExchange(id: string) {
+    const res = await fetch(`/api/giftexchange/${id}`, {
+        method: 'DELETE',
+    })
+    if (!res.ok) throw new Error('Failed to delete Gift Exchange')
+    return res.json()
+
+}
+
 export async function createGiftExchange(data: {
     name: string
     description?: string

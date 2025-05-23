@@ -103,7 +103,7 @@ model GiftExchangeMember {
   user           User           @relation(fields: [userId], references: [id])
   userId         String
 
-  giftExchange   GiftExchange   @relation(fields: [giftExchangeId], references: [id])
+  giftExchange   GiftExchange   @relation(fields: [giftExchangeId], references: [id], onDelete: Cascade)
   giftExchangeId String
 
   role           Role           @default(MEMBER)
