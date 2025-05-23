@@ -14,7 +14,6 @@ export function NewWishlistButton() {
 
     const handleSubmit = () => {
         if (!name.trim()) return
-
         startTransition(async () => {
             try {
                 await createNewWishlist(name.trim())
@@ -27,7 +26,6 @@ export function NewWishlistButton() {
                 } else {
                     setError("Something went wrong.")
                 }
-                
             }
         })
     }
@@ -35,7 +33,10 @@ export function NewWishlistButton() {
     return (
         <>
             <button
-                onClick={() => setOpen(true)}
+                onClick={() => {
+                    setError('')
+                    setOpen(true)
+                }}
                 className="bg-blue-600 text-white px-3 py-1 rounded text-sm"
             >
                 + New Wishlist
