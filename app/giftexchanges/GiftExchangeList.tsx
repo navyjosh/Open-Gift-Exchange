@@ -7,9 +7,6 @@ import { useTransition } from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ExpandableCard } from "@/components/ExpandableCard"
-import { isUserAdminOfExchange } from "@/lib/giftExchange/permission"
-
-
 
 export default function GiftExchangeList(
     { exchanges, userId }:
