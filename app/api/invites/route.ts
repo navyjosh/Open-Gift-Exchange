@@ -1,4 +1,5 @@
 // app/api/invites/route.ts
+import { sendInviteEmail } from '@/lib/email'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireSession } from '@/lib/auth/session'
@@ -6,10 +7,8 @@ import { randomUUID } from 'crypto'
 
 export async function POST(req: Request) {
     try {
-
-
         const session = await requireSession()
-        const { email, exchangeId } = await req.json()
+        const { email, exchangeId, exchangeName } = await req.json()
         console.log(`email ${email}`)
         console.log(`giftExchangeId: ${exchangeId}`)
 
@@ -39,6 +38,14 @@ export async function POST(req: Request) {
                 token,
                 exchangeId,
             },
+        })
+
+        
+        await sendInviteEmail({
+            to: email,
+            inviterName: session.user.name || "Someone",
+            exchangeName: exchangeName,
+            inviteLink: `${process.env.NEXT_PUBLIC_BASE_URL}/INVITE/${token}`
         })
 
         return NextResponse.json({ invite })

@@ -13,6 +13,7 @@ interface Invite {
 interface InviteListProps {
     exchange: {
         id: string
+        name: string
         invites: Invite[]
     }
 }
@@ -25,6 +26,8 @@ export function InviteList({ exchange }: InviteListProps) {
     const [error, setError] = useState<string | null>(null)
     const [pending, startTransition] = useTransition()
     const exchangeId = exchange.id
+    const exchangeName = exchange.name
+    
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -35,7 +38,7 @@ export function InviteList({ exchange }: InviteListProps) {
                 const res = await fetch('/api/invites', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, exchangeId }),
+                    body: JSON.stringify({ email, exchangeId, exchangeName }),
                 })
                 const data = await res.json()
 
@@ -44,6 +47,7 @@ export function InviteList({ exchange }: InviteListProps) {
                     return
                 }
 
+                
                 setEmail('')
                 setInvites((prev) => [...prev, data.invite])
                 console.log(`invites: ${invites}`)

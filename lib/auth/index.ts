@@ -5,6 +5,7 @@ import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcrypt'
 import { prisma } from '@/lib/prisma'
+import { cookies } from 'next/headers'
 
 // const prisma = new PrismaClient()
 const providers = []
@@ -61,6 +62,39 @@ export const authOptions: NextAuthOptions = {
             session.user.email = token.email as string
             session.user.name = token.name as string
             return session
+        },
+    },
+    events: {
+        async signIn({ user }) {
+            try {
+                const cookieStore = await cookies()
+                const token = cookieStore.get('inviteToken')?.value
+                if (!token) return
+
+                const invite = await prisma.invite.findUnique({
+                    where: { token },
+                })
+                if (
+                    invite &&
+                    invite.status === 'PENDING'
+                ) {
+                    await prisma.giftExchangeMember.create({
+                        data: {
+                            userId: user.id,
+                            giftExchangeId: invite.exchangeId,
+                            role: 'MEMBER'
+                        },
+                    })
+                    await prisma.invite.update({
+                        where: { token },
+                        data: { status: 'ACCEPTED' },
+                    })
+
+                    cookieStore.delete('inviteToken')
+                }
+            } catch (error) {
+                console.error('Error processing invite on signIn:', error)
+            }
         },
     },
     secret: process.env.NEXTAUTH_SECRET,
