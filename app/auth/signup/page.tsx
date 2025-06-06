@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { register } from '@/lib/auth/client'
 
-
 export default function SignUpPage() {
     const router = useRouter()
     const [email, setEmail] = useState('')
@@ -18,8 +17,19 @@ export default function SignUpPage() {
 
         try {
             await register({ email, password, name })
-            router.push('/auth/signin')
 
+            // ✅ Automatically sign the user in after successful registration
+            const res = await signIn('credentials', {
+                redirect: false,
+                email,
+                password,
+            })
+
+            if (res?.error) {
+                setError(res.error)
+            } else {
+                router.push('/') // or your desired post-login landing page
+            }
         } catch (err: unknown) {
             if (err instanceof Error) {
                 setError(err.message)
