@@ -5,7 +5,7 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
-export default function SignInPage() {
+export default function SignInPage({ inviteToken }: { inviteToken: string | null }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
@@ -19,24 +19,25 @@ export default function SignInPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
+        const callbackUrl = inviteToken
+            ? `/auth/post-invite?token=${inviteToken}`
+            : '/wishlists'
+
         const res = await signIn('credentials', {
             redirect: false,
             email,
             password,
-            callbackUrl: '/wishlists'
+            callbackUrl: callbackUrl
         })
 
         if (res?.error) {
             console.log('1')
             setError('Invalid credentials')
         } else if (res?.url) {
-            console.log(`2: ${res.url}`)
             router.push(res.url)
         } else {
-            console.log('3')
             router.push('/')
         }
-
     }
 
     return (
@@ -52,7 +53,7 @@ export default function SignInPage() {
                         src="/images/signin-assets/google-svg/light/web_light_rd_SI.svg"
                         alt="Sign in with Google"
                         className="block dark:hidden max-w-xs mx-auto cursor-pointer"
-                        onClick={() => signIn('google', {callbackUrl: '/wishlists'})}
+                        onClick={() => signIn('google', { callbackUrl: '/wishlists' })}
                     />
 
                     {/* Dark mode image */}

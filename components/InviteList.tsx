@@ -35,7 +35,7 @@ export function InviteList({ exchange }: InviteListProps) {
 
         startTransition(async () => {
             try {
-                const res = await fetch('/api/invites', {
+                const res = await fetch('/api/invite', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, exchangeId, exchangeName }),

@@ -1,4 +1,3 @@
-// app/api/invites/route.ts
 import { sendInviteEmail } from '@/lib/email'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
@@ -45,7 +44,7 @@ export async function POST(req: Request) {
             to: email,
             inviterName: session.user.name || "Someone",
             exchangeName: exchangeName,
-            inviteLink: `${process.env.NEXT_PUBLIC_BASE_URL}/INVITE/${token}`
+            inviteLink: `${process.env.NEXT_PUBLIC_BASE_URL}/invite/${token}`
         })
 
         return NextResponse.json({ invite })
