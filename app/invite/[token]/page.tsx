@@ -1,12 +1,12 @@
-// app/invite/[token]/page.tsx
 'use client'
 
+import { use } from 'react'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-export default function InvitePage({ params }: { params: { token: string } }) {
+export default function InvitePage({ params }: { params: Promise<{ token: string }> }) {
+    const { token } = use(params) // Unwrap the async params
     const router = useRouter()
-    const token = params.token
 
     useEffect(() => {
         if (!token) return
@@ -19,7 +19,6 @@ export default function InvitePage({ params }: { params: { token: string } }) {
                     body: JSON.stringify({ token }),
                 })
 
-                // Redirect after token is stored
                 router.replace('/auth/signin')
             } catch (err) {
                 console.error('Failed to store invite token:', err)
