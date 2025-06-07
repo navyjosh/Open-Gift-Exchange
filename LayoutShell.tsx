@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AuthButtons } from '@/components/AuthButtons'
+import { useEffect, useState } from 'react'
 
 export default function LayoutShell({
     children,
@@ -10,6 +11,21 @@ export default function LayoutShell({
     children: React.ReactNode
 }) {
     const pathname = usePathname()
+    const [pendingInvites, setPendingInvites] = useState(0)
+
+    useEffect(() => {
+        async function fetchInvites() {
+            try {
+                const res = await fetch('/api/invites/pending')
+                const data = await res.json()
+                setPendingInvites(data.count || 0)
+            } catch (err) {
+                console.error('Failed to fetch invites', err)
+            }
+        }
+
+        fetchInvites()
+    }, [])
 
     const navLinks = [
         { href: '/wishlists', label: 'Wishlists' },
@@ -35,6 +51,18 @@ export default function LayoutShell({
                                 {label}
                             </Link>
                         ))}
+                        {pendingInvites > 0 && (
+                            <Link
+                                href="/invites"
+                                title="You have pending invitations"
+                                className="relative ml-2 text-yellow-500"
+                            >
+                                🔔
+                                <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs px-1 rounded-full">
+                                    {pendingInvites}
+                                </span>
+                            </Link>
+                        )}
                     </nav>
                 </div>
 
