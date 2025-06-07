@@ -1,4 +1,4 @@
-// app/api/invite/store-token/route.ts
+
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 

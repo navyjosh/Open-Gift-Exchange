@@ -1,4 +1,3 @@
-// app/api/invite/accept/route.ts
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { cookies } from 'next/headers'

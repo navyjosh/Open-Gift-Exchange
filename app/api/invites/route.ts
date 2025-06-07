@@ -49,6 +49,6 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ invite })
     } catch (err) {
-        return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+        return NextResponse.json({ error: `Invalid request, ${err}` }, { status: 400 });
     }
 }

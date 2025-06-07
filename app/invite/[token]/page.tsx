@@ -15,7 +15,7 @@ export default function InvitePage({ params }: { params: Promise<{ token: string
 
         const storeInviteToken = async () => {
             try {
-                await fetch('/api/invite/store-token', {
+                await fetch('/api/invites/store-token', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ token }),
