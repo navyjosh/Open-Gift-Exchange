@@ -44,7 +44,7 @@ export async function POST(req: Request) {
             to: email,
             inviterName: session.user.name || "Someone",
             exchangeName: exchangeName,
-            inviteLink: `${process.env.NEXT_PUBLIC_BASE_URL}/invite/${token}`
+            inviteLink: `${process.env.NEXT_PUBLIC_BASE_URL}/invites/${token}`
         })
 
         return NextResponse.json({ invite })
