@@ -13,7 +13,7 @@ export function ExpandableCard({
     header,
     children,
     borderColor = 'border-gray-300 hover:border-blue-400',
-    defaultExpanded = false,
+    defaultExpanded = true,
     onExpand,
 }: ExpandableCardProps) {
     const [expanded, setExpanded] = useState(defaultExpanded)
