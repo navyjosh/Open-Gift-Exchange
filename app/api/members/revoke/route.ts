@@ -40,6 +40,13 @@ export async function POST(req: Request) {
             },
         })
 
+        await prisma.invite.deleteMany({
+            where: {
+                userId,
+                exchangeId: exchangeId,
+            },
+        })
+
         return NextResponse.json({ success: true })
     } catch (err) {
         console.error(err)
