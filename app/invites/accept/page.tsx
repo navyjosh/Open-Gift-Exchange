@@ -1,11 +1,11 @@
-// app/invite/accept/page.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function AcceptInvitePage() {
     const router = useRouter()
+    const searchParams = useSearchParams()
     const [status, setStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle')
     const [message, setMessage] = useState('')
 
@@ -13,10 +13,13 @@ export default function AcceptInvitePage() {
         const acceptInvite = async () => {
             setStatus('processing')
 
+            const token = searchParams.get('token') // ← Get ?token=... from URL
+
             try {
                 const res = await fetch('/api/invites/accept', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    body: token ? JSON.stringify({ token }) : undefined, // only pass if exists
                 })
 
                 const data = await res.json()
@@ -28,7 +31,6 @@ export default function AcceptInvitePage() {
                 setStatus('success')
                 setMessage('You have successfully joined the gift exchange!')
 
-                // Optionally redirect to exchanges after a delay
                 setTimeout(() => router.push('/giftexchanges'), 2000)
             } catch (err: any) {
                 setStatus('error')
@@ -37,7 +39,7 @@ export default function AcceptInvitePage() {
         }
 
         acceptInvite()
-    }, [router])
+    }, [router, searchParams])
 
     return (
         <div className="max-w-md mx-auto mt-20 p-6 border rounded shadow text-center">

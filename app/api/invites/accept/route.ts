@@ -3,12 +3,24 @@ import { prisma } from '@/lib/prisma'
 import { cookies } from 'next/headers'
 import { requireSession } from '@/lib/auth/session'
 
-export async function POST() {
+export async function POST(req: Request) {
     const cookieStore = await cookies()
-    const token = cookieStore.get('inviteToken')?.value
+    const cookieToken = cookieStore.get('inviteToken')?.value
+
+    let token = cookieToken
+
+    // If not in cookie, fall back to request body
+    if (!token) {
+        try {
+            const body = await req.json()
+            token = body.token
+        } catch {
+            // ignore parse errors
+        }
+    }
 
     if (!token) {
-        return NextResponse.json({ error: 'No invite token found' }, { status: 400 })
+        return NextResponse.json({ error: 'No invite token provided' }, { status: 400 })
     }
 
     const session = await requireSession()
@@ -54,8 +66,10 @@ export async function POST() {
         data: { status: 'ACCEPTED' },
     })
 
-    // Clear the token cookie
-    cookieStore.set('inviteToken', '', { path: '/', maxAge: 0 })
+    // Clear the token cookie if it existed
+    if (cookieToken) {
+        cookieStore.set('inviteToken', '', { path: '/', maxAge: 0 })
+    }
 
     return NextResponse.json({ success: true })
 }
