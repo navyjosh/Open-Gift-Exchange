@@ -8,8 +8,6 @@ export async function POST(req: Request) {
     try {
         const session = await requireSession()
         const { email, exchangeId, exchangeName } = await req.json()
-        console.log(`email ${email}`)
-        console.log(`giftExchangeId: ${exchangeId}`)
 
         if (!email || !exchangeId) {
             return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
@@ -29,6 +27,19 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
         }
 
+        const existing_invitation = await prisma.invite.findUnique({
+            where: {
+                email_exchangeId: {
+                    email: email,
+                    exchangeId: exchangeId
+                },
+            },
+        })
+
+        if (existing_invitation) {
+            return NextResponse.json({ error: 'That user already has been invited' }, { status: 401 })
+        }
+
         const token = randomUUID()
 
         const invite = await prisma.invite.create({
@@ -39,7 +50,7 @@ export async function POST(req: Request) {
             },
         })
 
-        
+
         await sendInviteEmail({
             to: email,
             inviterName: session.user.name || "Someone",
