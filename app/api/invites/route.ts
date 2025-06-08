@@ -40,6 +40,28 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'That user already has been invited' }, { status: 401 })
         }
 
+        const user = await prisma.user.findUnique({
+            where: { email },
+        })
+
+        if (user) {
+            const existingMember = await prisma.giftExchangeMember.findUnique({
+                where: {
+                    userId_giftExchangeId: {
+                        userId: user.id,
+                        giftExchangeId: exchangeId,
+                    },
+                },
+            })
+
+            if (existingMember) {
+                return NextResponse.json(
+                    { error: 'This user is already a member of the exchange' },
+                    { status: 400 }
+                )
+            }
+        }
+
         const token = randomUUID()
 
         const invite = await prisma.invite.create({
