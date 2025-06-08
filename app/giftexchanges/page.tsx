@@ -17,11 +17,17 @@ export default async function GiftExchangesPage() {
                 select: {
                     userId: true,
                     role: true,
+                    user: {
+                        select: {
+                            name: true,
+                            email: true,
+                        }
+                    }
                 },
             },
             invites: {
-                orderBy: {status: 'asc'},
-                select: {id: true, email: true, createdAt: true, status: true}                
+                orderBy: { status: 'asc' },
+                select: { id: true, email: true, createdAt: true, status: true }
             }
         },
     })
