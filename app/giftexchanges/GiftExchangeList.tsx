@@ -7,6 +7,7 @@ import { useTransition } from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ExpandableCard } from "@/components/ExpandableCard"
+import { MemberList } from "@/components/MemberList"
 import { InviteList } from "@/components/InviteList"
 
 export default function GiftExchangeList(
@@ -112,6 +113,7 @@ export default function GiftExchangeList(
                                         {currentUser?.role === 'ADMIN' ? 'Admin' : 'Member'}
                                     </p>
                                 </div>
+                                <MemberList exchange={exchange} />                                
                                 {isAdmin && (
                                     <InviteList exchange={exchange} />
                                 )}
