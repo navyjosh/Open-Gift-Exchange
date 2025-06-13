@@ -87,14 +87,14 @@ model GiftExchange {
   description String?
   maxSpend    Float?
   date        DateTime?
-  time        String? 
+  time        String?
   address     String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   members GiftExchangeMember[]
-  invites  Invite[]
+  invites Invite[]
 }
 
 enum Role {
@@ -103,20 +103,24 @@ enum Role {
 }
 
 model GiftExchangeMember {
-  id     String @id @default(uuid())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
+  id             String   @id @default(uuid())
+  user           User     @relation(fields: [userId], references: [id])
+  userId         String
 
   giftExchange   GiftExchange @relation(fields: [giftExchangeId], references: [id], onDelete: Cascade)
   giftExchangeId String
 
-  role Role @default(MEMBER)
+  role           Role     @default(MEMBER)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  assignedToId   String?  @unique
+  assignedTo     GiftExchangeMember? @relation("Assignments", fields: [assignedToId], references: [id])
+  assignedFrom   GiftExchangeMember? @relation("Assignments")
 
-  @@unique([userId, giftExchangeId]) 
+  @@unique([userId, giftExchangeId])
 }
+
 
 model Invite {
   id         String       @id @default(cuid())
@@ -130,7 +134,7 @@ model Invite {
   createdAt  DateTime     @default(now())
   acceptedAt DateTime?
 
-  @@unique([email, exchangeId]) 
+  @@unique([email, exchangeId])
 }
 
 enum InviteStatus {
