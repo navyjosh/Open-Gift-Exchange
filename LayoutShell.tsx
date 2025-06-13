@@ -29,7 +29,7 @@ export default function LayoutShell({
 
     const navLinks = [
         { href: '/wishlists', label: 'Wishlists' },
-        { href: '/giftexchanges', label: 'Gift Exchanges' },
+        { href: '/exchanges', label: 'Gift Exchanges' },
         { href: '/profile', label: 'Profile'}
     ]
 

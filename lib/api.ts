@@ -63,7 +63,7 @@ export async function deleteWishlist(id: string) {
 }
 
 export async function deleteGiftExchange(id: string) {
-    const res = await fetch(`/api/giftexchange/${id}`, {
+    const res = await fetch(`/api/exchanges/${id}`, {
         method: 'DELETE',
     })
     if (!res.ok) throw new Error('Failed to delete Gift Exchange')
@@ -79,7 +79,7 @@ export async function createGiftExchange(data: {
     time: string | null
     address: string | null
 }) {
-    const res = await fetch('/api/giftexchange', {
+    const res = await fetch('/api/exchanges', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

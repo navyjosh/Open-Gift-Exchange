@@ -1,4 +1,3 @@
-// app/giftexchanges/GiftExchangeList.tsx
 'use client'
 import { MoreVertical } from "lucide-react"
 import * as DropDownMenu from '@radix-ui/react-dropdown-menu'

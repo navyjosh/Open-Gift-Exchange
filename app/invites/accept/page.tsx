@@ -31,7 +31,7 @@ export default function AcceptInvitePage() {
                 setStatus('success')
                 setMessage('You have successfully joined the gift exchange!')
 
-                setTimeout(() => router.push('/giftexchanges'), 2000)
+                setTimeout(() => router.push('/exchanges'), 2000)
             } catch (err: any) {
                 setStatus('error')
                 setMessage(err.message || 'Something went wrong.')

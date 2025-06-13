@@ -19,7 +19,7 @@ export default function HomePage() {
                     View My Wishlists
                 </Link>
                 <Link
-                    href="/giftexchanges"
+                    href="/exchanges"
                     className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition"
                 >
                     Browse Gift Exchanges

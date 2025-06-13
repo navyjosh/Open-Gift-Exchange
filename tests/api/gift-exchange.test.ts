@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { POST } from '@/app/api/giftexchange/route'
+import { POST } from '@/app/api/exchanges/route'
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { PrismaClient } from '@prisma/client'
@@ -20,7 +20,7 @@ jest.mock('@/lib/prisma', () => ({
     },
 }))
 
-describe('POST /api/giftexchange', () => {
+describe('POST /api/exchanges', () => {
     it('creates a new gift exchange and returns it', async () => {
         const body = {
             name: 'Holiday Gift Swap',
@@ -56,7 +56,7 @@ describe('POST /api/giftexchange', () => {
 
         createMock.mockResolvedValue(mockExchange)
 
-        const req = new NextRequest('http://localhost/api/giftexchange', {
+        const req = new NextRequest('http://localhost/api/exchanges', {
             method: 'POST',
             body: JSON.stringify({
                 name: 'Holiday Gift Swap',

@@ -50,6 +50,7 @@ const [members, setMembers] = useState<Member[]>(exchange.members)
                 }
 
                 setMembers((prev) => prev.filter((m) => m.userId !== userId))
+                
             } catch (err) {
                 setError('Something went wrong.')
                 console.error(err)
