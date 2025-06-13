@@ -60,11 +60,17 @@ export async function POST(req: Request) {
         },
     })
 
-    // Update invite status
+    // Update invite status and connect to user
     await prisma.invite.update({
         where: { token },
-        data: { status: 'ACCEPTED' },
+        data: {
+            status: 'ACCEPTED',
+            user: {
+                connect: { id: session.user.id },
+            },
+        },
     })
+
 
     // Clear the token cookie if it existed
     if (cookieToken) {
