@@ -8,10 +8,11 @@ async function main() {
   await prisma.giftExchangeMember.deleteMany()
   await prisma.invite.deleteMany()
   await prisma.giftExchange.deleteMany()
+  await prisma.wishlist.deleteMany()
   await prisma.user.deleteMany()
 
   // Create admin user
-  const adminPassword = await bcrypt.hash('adminpassword', 10)
+  const adminPassword = await bcrypt.hash('admin', 10)
   const admin = await prisma.user.create({
     data: {
       email: 'admin@admin.com',
@@ -33,6 +34,35 @@ async function main() {
         })
     )
   )
+
+  // Create wishlists for Alice and Bob
+  const alice = users[0]
+  const bob = users[1]
+
+  const aliceWishlist = await prisma.wishlist.create({
+    data: {
+      name: 'Alice’s Wishlist',
+      userId: alice.id,
+    },
+  })
+
+  const bobWishlist = await prisma.wishlist.create({
+    data: {
+      name: 'Bob’s Wishlist',
+      userId: bob.id,
+    },
+  })
+
+  // Update Alice and Bob to set default wishlist
+  await prisma.user.update({
+    where: { id: alice.id },
+    data: { defaultWishlistId: aliceWishlist.id },
+  })
+
+  await prisma.user.update({
+    where: { id: bob.id },
+    data: { defaultWishlistId: bobWishlist.id },
+  })
 
   // Create gift exchange
   const exchange = await prisma.giftExchange.create({
