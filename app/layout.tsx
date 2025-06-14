@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Wishlist",
-  description: "A simple wishlist / gift exchange webapp.",
+  title: "Open Gift Exchange",
+  description: "A web app to create wishlists and also exchange gifts anonymously within groups.",
 };
 
 export default function RootLayout({
