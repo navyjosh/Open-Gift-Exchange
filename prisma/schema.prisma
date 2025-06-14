@@ -8,27 +8,33 @@ datasource db {
 }
 
 model User {
-  id             String     @id @default(cuid())
-  email          String     @unique
+  id             String    @id @default(cuid())
+  email          String    @unique
   emailVerified  DateTime?
   hashedPassword String?
   name           String?
   image          String?
-  wishlists      Wishlist[]
-  createdAt      DateTime   @default(now())
-  Account        Account[]
-  Session        Session[]
+  createdAt      DateTime  @default(now())
+
+  wishlists         Wishlist[]
+  defaultWishlistId String?    @unique
+  defaultWishlist   Wishlist?  @relation("DefaultWishlist", fields: [defaultWishlistId], references: [id])
+
+  Account Account[]
+  Session Session[]
 
   memberships GiftExchangeMember[]
   Invite      Invite[]
 }
 
 model Wishlist {
-  id        String         @id @default(cuid())
-  name      String
-  userId    String
-  user      User           @relation(fields: [userId], references: [id])
-  isActive  Boolean        @default(false)
+  id     String @id @default(cuid())
+  name   String
+  userId String
+
+  user           User  @relation(fields: [userId], references: [id])
+  defaultForUser User? @relation("DefaultWishlist")
+
   items     WishlistItem[]
   createdAt DateTime       @default(now())
 
@@ -103,24 +109,23 @@ enum Role {
 }
 
 model GiftExchangeMember {
-  id             String   @id @default(uuid())
-  user           User     @relation(fields: [userId], references: [id])
-  userId         String
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
   giftExchange   GiftExchange @relation(fields: [giftExchangeId], references: [id], onDelete: Cascade)
   giftExchangeId String
 
-  role           Role     @default(MEMBER)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  role      Role     @default(MEMBER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  assignedToId   String?  @unique
-  assignedTo     GiftExchangeMember? @relation("Assignments", fields: [assignedToId], references: [id])
-  assignedFrom   GiftExchangeMember? @relation("Assignments")
+  assignedToId String?             @unique
+  assignedTo   GiftExchangeMember? @relation("Assignments", fields: [assignedToId], references: [id])
+  assignedFrom GiftExchangeMember? @relation("Assignments")
 
   @@unique([userId, giftExchangeId])
 }
-
 
 model Invite {
   id         String       @id @default(cuid())
