@@ -45,6 +45,26 @@ async function main() {
     },
   })
 
+// Add items to Alice's wishlist
+  await prisma.wishlistItem.createMany({
+  data: [
+    {
+      name: 'Cozy Blanket',
+      link: 'https://example.com/cozy-blanket',
+      price: 29.99,
+      notes: 'Prefer gray or blue',
+      wishlistId: aliceWishlist.id,
+    },
+    {
+      name: 'Novelty Mug',
+      link: 'https://example.com/funny-mug',
+      price: 14.99,
+      notes: 'Something funny or cute',
+      wishlistId: aliceWishlist.id,
+    },
+  ],
+  })
+
   const bobWishlist = await prisma.wishlist.create({
     data: {
       name: "Bob's Wishlist",
