@@ -15,6 +15,7 @@ export default async function GiftExchangesPage() {
         include: {
             members: {
                 select: {
+                    id: true,
                     userId: true,
                     role: true,
                     user: {
