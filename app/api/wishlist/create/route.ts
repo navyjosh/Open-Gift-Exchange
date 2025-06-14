@@ -7,7 +7,6 @@ const prisma = new PrismaClient()
 
 export async function POST(req: NextRequest) {
     const session = await requireSession()
-
     const { name } = await req.json()
 
     if (!name || typeof name !== 'string') {
@@ -18,12 +17,26 @@ export async function POST(req: NextRequest) {
         const wishlist = await prisma.wishlist.create({
             data: {
                 name: name.trim(),
-                userId: session.user.id,                
+                userId: session.user.id,
             },
         })
+
+        // Check if the user already has a default wishlist
+        const user = await prisma.user.findUnique({
+            where: { id: session.user.id },
+            select: { defaultWishlistId: true },
+        })
+
+        // If not, assign the new wishlist as the default
+        if (!user?.defaultWishlistId) {
+            await prisma.user.update({
+                where: { id: session.user.id },
+                data: { defaultWishlistId: wishlist.id },
+            })
+        }
+
         return NextResponse.json(wishlist)
-    }
-    catch (err) {
+    } catch (err) {
         if (
             err instanceof Prisma.PrismaClientKnownRequestError &&
             err.code === 'P2002'
@@ -33,6 +46,8 @@ export async function POST(req: NextRequest) {
                 { status: 409 }
             )
         }
+
+        console.error('Wishlist creation error:', err)
         return NextResponse.json(
             { error: 'Something went wrong creating wishlist' },
             { status: 500 }
