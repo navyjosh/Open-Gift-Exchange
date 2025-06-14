@@ -1,6 +1,7 @@
 'use client'
 
 import { Mail, Edit, ListTodo, Trash2, Check, X } from 'lucide-react'
+import Link from 'next/link'
 
 interface Member {
     id: string
@@ -15,10 +16,11 @@ interface Member {
 
 interface MemberListProps {
     members: Member[]
+    exchangeId: string
     onRevoke?: (memberId: string) => void
 }
 
-export function MemberList({ members, onRevoke }: MemberListProps) {
+export function MemberList({ members, exchangeId }: MemberListProps) {
     return (
         <div className="mt-6">
             <p className="font-semibold text-sm mb-2">Members:</p>
@@ -55,15 +57,21 @@ export function MemberList({ members, onRevoke }: MemberListProps) {
                                     {member.user.name || member.user.email}
                                 </td>
                                 <td className="px-4 py-2 border-r flex justify-center">
-                                    {member.assignedToId 
-                                    ? <span title={`${member.user.name} has been assigned a recipient.`}><Check /></span> 
-                                    : <span title={`${member.user.name} needs assignment.`}><X /></span>}
+                                    {member.assignedToId
+                                        ? <span title={`${member.user.name} has been assigned a recipient.`}><Check /></span>
+                                        : <span title={`${member.user.name} needs assignment.`}><X /></span>}
                                 </td>
                                 <td className="">
                                     <div className='flex justify-around'>
                                         <Mail />
                                         <Edit />
-                                        <ListTodo />
+                                        <Link
+                                            href={`/exchanges/${exchangeId}/members/${member.id}/wishlist`}
+                                            title="View wishlist"
+                                            className="text-gray-600 hover:text-blue-600"
+                                        >
+                                            <ListTodo />
+                                        </Link>
                                         <Trash2 />
                                     </div>
                                 </td>
