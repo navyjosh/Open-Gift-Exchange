@@ -18,8 +18,7 @@ export async function POST(req: NextRequest) {
         const wishlist = await prisma.wishlist.create({
             data: {
                 name: name.trim(),
-                userId: session.user.id,
-                isActive: false,
+                userId: session.user.id,                
             },
         })
         return NextResponse.json(wishlist)
