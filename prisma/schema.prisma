@@ -35,8 +35,9 @@ model Wishlist {
   user           User  @relation(fields: [userId], references: [id])
   defaultForUser User? @relation("DefaultWishlist")
 
-  items     WishlistItem[]
-  createdAt DateTime       @default(now())
+  items              WishlistItem[]
+  createdAt          DateTime             @default(now())
+  GiftExchangeMember GiftExchangeMember[]
 
   @@unique([userId, name])
 }
@@ -115,6 +116,9 @@ model GiftExchangeMember {
 
   giftExchange   GiftExchange @relation(fields: [giftExchangeId], references: [id], onDelete: Cascade)
   giftExchangeId String
+
+  wishlist   Wishlist? @relation(fields: [wishlistId], references: [id])
+  wishlistId String?
 
   role      Role     @default(MEMBER)
   createdAt DateTime @default(now())
