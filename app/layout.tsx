@@ -31,7 +31,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-white dark:bg-gray-950 text-black dark:text-white`}
       >
         <Providers>
-          {/* Client component needed to conditionally render header */}
           <LayoutShell>
             {children}
           </LayoutShell>
