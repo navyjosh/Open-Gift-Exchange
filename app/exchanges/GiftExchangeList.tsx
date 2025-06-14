@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation"
 import { ExpandableCard } from "@/components/ExpandableCard"
 import { MemberList } from "@/components/MemberList"
 import { InviteList } from "@/components/InviteList"
+import Link from "next/link"
 
 export default function GiftExchangeList(
     { exchanges, userId }:
@@ -18,7 +19,7 @@ export default function GiftExchangeList(
     const router = useRouter()
     const [deleting, startTransition] = useTransition()
     const [error, setError] = useState<string | null>(null)
-    
+
 
     function handleDelete(name: string, id: string): void {
         if (!confirm(`Delete "${name}"?`)) return
@@ -67,10 +68,20 @@ export default function GiftExchangeList(
                                                     <DropDownMenu.Content
                                                         sideOffset={4}
                                                         className="z-50 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-md text-sm"
-                                                    >{isAdmin && (<DropDownMenu.Item
-                                                        onSelect={() => handleDelete(exchange.name, exchange.id)}
-                                                        className="px-3 py-2 hover:bg-red-100 dark:hover:bg-red-900 text-red-600 dark:text-red-400 cursor-pointer"
-                                                    >Delete</DropDownMenu.Item>)}
+                                                    >{isAdmin && (
+                                                        <>
+                                                            <DropDownMenu.Item>
+                                                                <Link
+                                                                    href={`/exchanges/${exchange.id}/assignments/`}
+                                                                    className="px-3 py-2 hover:bg-red-100 dark:hover:bg-grey-900 text-grey-600 dark:text-grey-400 cursor-pointer"
+                                                                >Assignments</Link>
+                                                            </DropDownMenu.Item>
+                                                            <DropDownMenu.Item
+                                                                onSelect={() => handleDelete(exchange.name, exchange.id)}
+                                                                className="px-3 py-2 hover:bg-red-100 dark:hover:bg-red-900 text-red-600 dark:text-red-400 cursor-pointer"
+                                                            >Delete</DropDownMenu.Item>
+                                                        </>
+                                                    )}
                                                     </DropDownMenu.Content>
                                                 </DropDownMenu.Portal>
                                             </DropDownMenu.Root>
@@ -112,7 +123,7 @@ export default function GiftExchangeList(
                                         {currentUser?.role === 'ADMIN' ? 'Admin' : 'Member'}
                                     </p>
                                 </div>
-                                <MemberList exchange={exchange} />                                
+                                <MemberList members={exchange.members} />
                                 {isAdmin && (
                                     <InviteList exchange={exchange} />
                                 )}

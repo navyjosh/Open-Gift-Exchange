@@ -13,7 +13,7 @@
     "lint": "next lint",
     "migrate": "prisma migrate dev --name",
     "db:push": "prisma db push",
-    "db:seed": "ts-node prisma/seed.ts",
+    "db:seed": "ts-node prisma/seed.js",
     "test": "jest"
   },
   "dependencies": {
