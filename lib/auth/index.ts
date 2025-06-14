@@ -6,6 +6,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcrypt'
 import { prisma } from '@/lib/prisma'
 import { cookies } from 'next/headers'
+import { sendVerificationEmail } from '../email'
 
 // const prisma = new PrismaClient()
 const providers = []
@@ -96,6 +97,41 @@ export const authOptions: NextAuthOptions = {
                 console.error('Error processing invite on signIn:', error)
             }
         },
+        async createUser({ user }) {
+            try {
+                const account = await prisma.account.findFirst({
+                    where: { userId: user.id },
+                })
+
+                const isGoogle = account?.provider === 'google'
+
+                if (isGoogle) {
+                    await prisma.user.update({
+                        where: { id: user.id },
+                        data: { emailVerified: new Date() },
+                    })
+
+                    await sendVerificationEmail({
+                        to: user.email!,
+                        name: user.name || undefined,
+                        verifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/wishlists`,
+                        sendVerificationLink: false,
+                    })
+
+                } else if (user.email) {
+                    await sendVerificationEmail({
+                        to: user.email,
+                        name: user.name || undefined,
+                        verifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/wishlists`,
+                        sendVerificationLink: true,
+                    })
+                }
+
+            } catch (err) {
+                console.error('Error sending welcome/verification email:', err)
+            }
+        }
+        ,
     },
     secret: process.env.NEXTAUTH_SECRET,
 }

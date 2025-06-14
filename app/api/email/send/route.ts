@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
+import { transporter } from '@/lib/email'
+
 
 export async function POST(req: Request) {
     try {
@@ -8,17 +9,6 @@ export async function POST(req: Request) {
         if (!to || !subject || (!text && !html)) {
             return NextResponse.json({ error: 'Missing email parameters' }, { status: 400 })
         }
-
-        const transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_HOST,
-            port: Number(process.env.EMAIL_PORT),
-            secure: process.env.EMAIL_SECURE === 'true',
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            },
-        })
-
         await transporter.sendMail({
             from: process.env.EMAIL_FROM,
             to,

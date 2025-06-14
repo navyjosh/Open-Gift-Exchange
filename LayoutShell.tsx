@@ -38,7 +38,7 @@ export default function LayoutShell({
             <header className="flex items-center justify-between px-6 py-4 border-b">
                 <div className="flex items-center gap-6">
                     <Link href="/" className="text-xl font-bold">
-                        Wishlist
+                        Open Gift Exchange
                     </Link>
 
                     <nav className="hidden md:flex items-center gap-4 text-sm font-medium">
