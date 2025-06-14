@@ -10,8 +10,7 @@ export async function GET() {
     try {
         const wishlist = await prisma.wishlist.findFirst({
             where: {
-                userId: DUMMY_USER_ID,
-                isActive: true,
+                userId: DUMMY_USER_ID,                
             },
         })
 

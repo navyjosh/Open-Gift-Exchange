@@ -31,8 +31,7 @@ export default async function Home() {
                     <WishlistListItem
                         key={list.id}
                         id={list.id}
-                        name={list.name}
-                        isActive={list.isActive}
+                        name={list.name}                        
                         items={list.items}
                     />
                 ))}

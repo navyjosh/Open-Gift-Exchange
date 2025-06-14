@@ -22,12 +22,11 @@ interface WishlistItem {
 
 interface WishlistListItemProps {
     id: string
-    name: string
-    isActive: boolean
+    name: string    
     items: WishlistItem[]
 }
 
-export function WishlistListItem({ id, name, isActive, items: initialItems }: WishlistListItemProps) {
+export function WishlistListItem({ id, name, items: initialItems }: WishlistListItemProps) {
     const router = useRouter()
     const [expanded, setExpanded] = useState(false)
     const [deleting, startTransition] = useTransition()
@@ -101,8 +100,7 @@ export function WishlistListItem({ id, name, isActive, items: initialItems }: Wi
             header={
                 <>
                     <div>
-                        <p className="font-medium">{name}</p>
-                        {isActive && <span className="text-green-600 text-sm">Active</span>}
+                        <p className="font-medium">{name}</p>                        
                     </div>
                     <div className="flex items-center gap-2">
                         <DropdownMenu.Root>
