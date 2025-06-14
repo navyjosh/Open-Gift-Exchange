@@ -51,12 +51,21 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: 'Already a member' })
     }
 
-    // Add user as member
+    // Get user's default wishlist
+    const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: {
+            defaultWishlist: { select: { id: true } },
+        },
+    })
+
+    // Add user as member with default wishlist (if any)
     await prisma.giftExchangeMember.create({
         data: {
             userId: session.user.id,
             giftExchangeId: invite.exchangeId,
             role: 'MEMBER',
+            wishlistId: user?.defaultWishlist?.id ?? null,
         },
     })
 
@@ -70,7 +79,6 @@ export async function POST(req: Request) {
             },
         },
     })
-
 
     // Clear the token cookie if it existed
     if (cookieToken) {
