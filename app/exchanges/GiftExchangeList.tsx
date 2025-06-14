@@ -123,7 +123,7 @@ export default function GiftExchangeList(
                                         {currentUser?.role === 'ADMIN' ? 'Admin' : 'Member'}
                                     </p>
                                 </div>
-                                <MemberList members={exchange.members} />
+                                <MemberList members={exchange.members} exchangeId={exchange.id} />
                                 {isAdmin && (
                                     <InviteList exchange={exchange} />
                                 )}
