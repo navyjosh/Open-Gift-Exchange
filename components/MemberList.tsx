@@ -1,6 +1,6 @@
 'use client'
 
-import { Mail, Edit, ListCheck, ListChecks, ListEnd, ListX, ListTodo, Trash, Trash2, TrashIcon, Trash2Icon } from 'lucide-react'
+import { Mail, Edit, ListTodo, Trash2, Check, X } from 'lucide-react'
 
 interface Member {
     id: string
@@ -54,8 +54,10 @@ export function MemberList({ members, onRevoke }: MemberListProps) {
                                 <td className="px-4 py-2 border-r">
                                     {member.user.name || member.user.email}
                                 </td>
-                                <td className="px-4 py-2 border-r">
-                                    {member.assignedToId ? '✅' : '❌'}
+                                <td className="px-4 py-2 border-r flex justify-center">
+                                    {member.assignedToId 
+                                    ? <span title={`${member.user.name} has been assigned a recipient.`}><Check /></span> 
+                                    : <span title={`${member.user.name} needs assignment.`}><X /></span>}
                                 </td>
                                 <td className="">
                                     <div className='flex justify-around'>
