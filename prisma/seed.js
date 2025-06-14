@@ -12,7 +12,7 @@ async function main() {
   await prisma.user.deleteMany()
 
   // Create admin user
-  const adminPassword = await bcrypt.hash('admin', 10)
+  const adminPassword = await bcrypt.hash('adminpassword', 10)
   const admin = await prisma.user.create({
     data: {
       email: 'admin@admin.com',
@@ -35,25 +35,24 @@ async function main() {
     )
   )
 
-  // Create wishlists for Alice and Bob
-  const alice = users[0]
-  const bob = users[1]
+  // Create wishlists for two users
+  const [alice, bob] = users
 
   const aliceWishlist = await prisma.wishlist.create({
     data: {
-      name: 'Alice’s Wishlist',
+      name: "Alice's Wishlist",
       userId: alice.id,
     },
   })
 
   const bobWishlist = await prisma.wishlist.create({
     data: {
-      name: 'Bob’s Wishlist',
+      name: "Bob's Wishlist",
       userId: bob.id,
     },
   })
 
-  // Update Alice and Bob to set default wishlist
+  // Set those as their default
   await prisma.user.update({
     where: { id: alice.id },
     data: { defaultWishlistId: aliceWishlist.id },
@@ -74,7 +73,7 @@ async function main() {
     },
   })
 
-  // Assign members
+  // Assign members with wishlists
   await prisma.giftExchangeMember.createMany({
     data: [
       {
@@ -82,11 +81,23 @@ async function main() {
         giftExchangeId: exchange.id,
         role: 'ADMIN',
       },
-      ...users.map((u) => ({
-        userId: u.id,
+      {
+        userId: alice.id,
         giftExchangeId: exchange.id,
         role: 'MEMBER',
-      })),
+        wishlistId: aliceWishlist.id,
+      },
+      {
+        userId: bob.id,
+        giftExchangeId: exchange.id,
+        role: 'MEMBER',
+        wishlistId: bobWishlist.id,
+      },
+      {
+        userId: users[2].id, // Carol
+        giftExchangeId: exchange.id,
+        role: 'MEMBER',
+      },
     ],
   })
 
