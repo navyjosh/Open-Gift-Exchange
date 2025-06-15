@@ -10,7 +10,6 @@ export async function DELETE(req: NextRequest) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // ✅ Extract the wishlist ID from the request URL
     const url = new URL(req.url)
     const id = url.pathname.split('/').pop()
 
@@ -20,10 +19,20 @@ export async function DELETE(req: NextRequest) {
 
     const wishlist = await prisma.wishlist.findUnique({
         where: { id },
+        include: {
+            user: true, // We need access to defaultWishlistId
+        },
     })
 
     if (!wishlist || wishlist.userId !== session.user.id) {
         return NextResponse.json({ error: 'Not found or forbidden' }, { status: 403 })
+    }
+
+    // Prevent deleting the default wishlist
+    if (wishlist.user.defaultWishlistId === wishlist.id) {
+        return NextResponse.json({
+            error: 'You cannot delete your default wishlist. Please assign another wishlist as default first.',
+        }, { status: 400 })
     }
 
     await prisma.wishlist.delete({
