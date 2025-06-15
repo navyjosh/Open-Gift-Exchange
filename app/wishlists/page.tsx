@@ -30,10 +30,6 @@ export default async function Home() {
                 <NewWishlistButton />
             </div>
 
-            <div>
-                Default Wishlist id: {session.user.defaultWishlistId}
-            </div>
-
             <ul className="space-y-4">
                 {wishlists.map((list) => (
                     <WishlistListItem
