@@ -53,7 +53,12 @@ export async function POST(req: NextRequest) {
 
     // Send verification email
     try {
-        await sendVerificationEmail(email, verifyUrl)
+        await sendVerificationEmail({
+            to: email,
+            name: name,
+            verifyUrl: verifyUrl,
+            sendVerificationLink: true
+        })
     } catch (error) {
         console.error('Failed to send verification email:', error)
         // We still allow the user to register
