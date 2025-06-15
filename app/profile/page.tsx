@@ -22,6 +22,10 @@ export default async function ProfilePage() {
                     <p className="text-sm text-gray-500">Email</p>
                     <p className="font-medium">{session.user.email}</p>
                 </div>
+                <div>
+                    <p className='text-sm text-gray-500'>Email Verified</p>
+                    <p className='font-medium'>{session.user.emailVerified === null ? 'No' : 'Yes'}</p>
+                </div>
                 {/* Add more profile fields or settings here */}
             </div>
         </div>
