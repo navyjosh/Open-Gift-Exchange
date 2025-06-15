@@ -8,7 +8,7 @@ import { prisma } from '@/lib/prisma'
 import { cookies } from 'next/headers'
 import { sendVerificationEmail } from '../email'
 
-// const prisma = new PrismaClient()
+
 const providers = []
 if (isGoogleAuthEnabled) {
     providers.push(GoogleProvider({

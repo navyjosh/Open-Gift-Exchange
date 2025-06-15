@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client/extension'
 
-const prisma = new PrismaClient()
+import {prisma} from '@/lib/prisma'
 
 // Replace with actual auth logic later
 const DUMMY_USER_ID = 'cmar0r2780000zvp8n3v09g3s'

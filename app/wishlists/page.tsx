@@ -1,9 +1,7 @@
-import { PrismaClient } from "@prisma/client"
+import { prisma } from "@/lib/prisma"
 import { requireSession } from "@/lib/auth/session"
 import { NewWishlistButton } from "../../components/NewWishlistButton"
 import { WishlistListItem } from "@/components/WishlistListItem"
-
-const prisma = new PrismaClient()
 
 export default async function Home() {
     const session = await requireSession()

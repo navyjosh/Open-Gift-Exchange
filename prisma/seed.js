@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
+import { prisma } from '@/lib/prisma'
 
-const prisma = new PrismaClient()
 
 async function main() {
   // Clear existing data
