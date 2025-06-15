@@ -2,7 +2,7 @@
 
 
 export async function getWishlistItems() {
-    const res = await fetch('/api/wishlist/item')
+    const res = await fetch('/api/wishlists/item')
     if (!res.ok) throw new Error('Failed to fetch wishlist')
     return res.json()
 }
@@ -14,7 +14,7 @@ export async function createWishlistItem(
     price?: number,
     notes?: string
 ) {
-    const res = await fetch('/api/wishlist/item', {
+    const res = await fetch('/api/wishlists/item', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export async function createWishlistItem(
 }
 
 export async function deleteItem(id: string) {
-    const res = await fetch(`/api/wishlist/item/${id}`, {
+    const res = await fetch(`/api/wishlists/item/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export async function deleteItem(id: string) {
 }
 
 export async function createNewWishlist(name: string) {
-    const res = await fetch('/api/wishlist/create', {
+    const res = await fetch('/api/wishlists/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name }),
@@ -54,7 +54,7 @@ export async function createNewWishlist(name: string) {
 }
 
 export async function deleteWishlist(id: string) {
-    const res = await fetch(`/api/wishlist/${id}`, {
+    const res = await fetch(`/api/wishlists/${id}`, {
         method: 'DELETE',
     })
 

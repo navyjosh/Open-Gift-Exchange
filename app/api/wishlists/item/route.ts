@@ -28,8 +28,6 @@ export async function POST(req: NextRequest) {
     }
 }
 
-
-// GET /api/wishlist
 export async function GET() {
     const items = await prisma.wishlistItem.findMany({
         orderBy: { createdAt: 'desc' },
