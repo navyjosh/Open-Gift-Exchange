@@ -9,6 +9,7 @@ import { deleteItem } from '@/lib/api'
 import { ExpandableCard } from '@/components/ExpandableCard'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { MoreVertical } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 interface WishlistItem {
     id: string
@@ -40,22 +41,24 @@ export function WishlistListItem({ id, name, defaultWishlistId, items: initialIt
     const nameInputRef = useRef<HTMLInputElement>(null)
     const prevExpandedRef = useRef(false)
 
-    const handleDeleteWishlist = (name: string) => {
-        if (!confirm(`Delete "${name}"?`)) return
+    const handleDeleteWishlist = () => {
+        if (!confirm(`Are you sure you want to delete your "${name}" Wishlist?`)) return
 
         startTransition(async () => {
             try {
                 const res = await fetch(`/api/wishlists/${id}`, { method: 'DELETE' })
+
                 if (!res.ok) {
                     const data = await res.json()
-                    setError(data.error || 'Failed to delete wishlist')
+                    toast.error(data.error || 'Failed to delete wishlist')
                     return
                 }
+
+                toast.success(`Deleted "${name}"`)
                 router.refresh()
             } catch {
-                setError('Failed to delete wishlist')
+                toast.error('Failed to delete wishlist')
             }
-
         })
     }
 
