@@ -22,11 +22,12 @@ interface WishlistItem {
 
 interface WishlistListItemProps {
     id: string
-    name: string    
+    name: string
+    defaultWishlistId?: string
     items: WishlistItem[]
 }
 
-export function WishlistListItem({ id, name, items: initialItems }: WishlistListItemProps) {
+export function WishlistListItem({ id, name, defaultWishlistId, items: initialItems }: WishlistListItemProps) {
     const router = useRouter()
     const [expanded, setExpanded] = useState(false)
     const [deleting, startTransition] = useTransition()
@@ -100,7 +101,12 @@ export function WishlistListItem({ id, name, items: initialItems }: WishlistList
             header={
                 <>
                     <div>
-                        <p className="font-medium">{name}</p>                        
+                        <p className="font-medium flex items-center gap-2">
+                            {name}
+                            {defaultWishlistId === id && (<span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-0.5 rounded dark:bg-green-900 dark:text-green-300 ml-2">Default</span>)                            
+                        }
+                        </p>                        
+
                     </div>
                     <div className="flex items-center gap-2">
                         <DropdownMenu.Root>
@@ -227,17 +233,17 @@ export function WishlistListItem({ id, name, items: initialItems }: WishlistList
                                     className="border px-2 py-1 rounded text-sm dark:bg-gray-800 dark:text-white"
                                 />
                                 <div className="flex justify-end">
-                            <button
-                                type="submit"
-                                className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm"
-                            >
-                                Add <span className="text-xs">↵</span>
-                            </button>
-                        </div>
+                                    <button
+                                        type="submit"
+                                        className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm"
+                                    >
+                                        Add <span className="text-xs">↵</span>
+                                    </button>
+                                </div>
                             </>
                         )}
 
-                        
+
                     </li>
                 </form>
             </ul>

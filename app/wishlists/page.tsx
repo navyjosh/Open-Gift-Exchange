@@ -7,13 +7,17 @@ const prisma = new PrismaClient()
 
 export default async function Home() {
     const session = await requireSession()
-    const wishlists = await prisma.wishlist.findMany({
-        where: { userId: session.user.id },
-        orderBy: { createdAt: 'desc' },
-        include: {
-            items: true,
-        }
-    })
+    const [wishlists, user] = await Promise.all([
+        prisma.wishlist.findMany({
+            where: { userId: session.user.id },
+            orderBy: { createdAt: 'desc' },
+            include: { items: true },
+        }),
+        prisma.user.findUnique({
+            where: { id: session.user.id },
+            select: { defaultWishlistId: true },
+        }),
+    ])
 
     return (
         <main className="p-8 max-w-xl mx-auto">
@@ -26,13 +30,19 @@ export default async function Home() {
                 <NewWishlistButton />
             </div>
 
+            <div>
+                Default Wishlist id: {session.user.defaultWishlistId}
+            </div>
+
             <ul className="space-y-4">
                 {wishlists.map((list) => (
                     <WishlistListItem
                         key={list.id}
                         id={list.id}
-                        name={list.name}                        
+                        name={list.name}
+                        defaultWishlistId={user?.defaultWishlistId ?? ''}
                         items={list.items}
+
                     />
                 ))}
             </ul>
