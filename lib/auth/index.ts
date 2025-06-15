@@ -98,12 +98,14 @@ export const authOptions: NextAuthOptions = {
             }
         },
         async createUser({ user }) {
+            console.log('📨 createUser triggered for:', user.email)
             try {
                 const account = await prisma.account.findFirst({
                     where: { userId: user.id },
                 })
 
                 const isGoogle = account?.provider === 'google'
+                console.log(`account?.provider: ${account?.provider}`)
 
                 if (isGoogle) {
                     await prisma.user.update({
