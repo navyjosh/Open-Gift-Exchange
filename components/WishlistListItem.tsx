@@ -47,11 +47,17 @@ export function WishlistListItem({ id, name, defaultWishlistId, items: initialIt
 
         startTransition(async () => {
             try {
-                await deleteWishlist(id)
+                const res = await fetch(`/api/wishlists/${id}`, { method: 'DELETE' })
+                if (!res.ok) {
+                    const data = await res.json()
+                    setError(data.error || 'Failed to delete wishlist')
+                    return
+                }
                 router.refresh()
             } catch {
-                setError('Failed to delete Wishlist')
+                setError('Failed to delete wishlist')
             }
+
         })
     }
 
