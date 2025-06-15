@@ -1,11 +1,9 @@
 'use client'
-
 import { useEffect } from 'react'
 import { useRef } from 'react'
 import { LucideLink2Off, LinkIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useTransition, useState } from 'react'
-import { deleteWishlist } from '@/lib/api'
 import { createWishlistItem } from '@/lib/api'
 import { deleteItem } from '@/lib/api'
 import { ExpandableCard } from '@/components/ExpandableCard'
