@@ -103,9 +103,9 @@ export function WishlistListItem({ id, name, defaultWishlistId, items: initialIt
                     <div>
                         <p className="font-medium flex items-center gap-2">
                             {name}
-                            {defaultWishlistId === id && (<span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-0.5 rounded dark:bg-green-900 dark:text-green-300 ml-2">Default</span>)                            
-                        }
-                        </p>                        
+                            {defaultWishlistId === id && (<span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-0.5 rounded dark:bg-green-900 dark:text-green-300 ml-2">Default</span>)
+                            }
+                        </p>
 
                     </div>
                     <div className="flex items-center gap-2">
@@ -123,6 +123,20 @@ export function WishlistListItem({ id, name, defaultWishlistId, items: initialIt
                                     sideOffset={4}
                                     className="z-50 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-md text-sm"
                                 >
+                                    <DropdownMenu.Item
+                                        onSelect={async () => {
+                                            try {
+                                                await fetch(`/api/wishlists/${id}/set-default`, { method: 'POST' })
+                                                router.refresh()
+                                            } catch (err) {
+                                                console.error('Failed to set default wishlist')
+                                            }
+                                        }}
+                                        className="px-3 py-2 hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-600 dark:text-blue-300 cursor-pointer"
+                                    >
+                                        Set as Default
+                                    </DropdownMenu.Item>
+
                                     <DropdownMenu.Item
                                         onSelect={handleDeleteWishlist}
                                         className="px-3 py-2 hover:bg-red-100 dark:hover:bg-red-900 text-red-600 dark:text-red-400 cursor-pointer"
