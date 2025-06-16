@@ -39,7 +39,7 @@ providers.push(CredentialsProvider({
             return null
         }
 
-        return { id: user.id, email: user.email, name: user.name }
+        return { id: user.id, email: user.email, name: user.name, emailVerified: user.emailVerified }
     }
 }))
 
@@ -63,6 +63,7 @@ export const authOptions: NextAuthOptions = {
             session.user.id = token.id as string
             session.user.email = token.email as string
             session.user.name = token.name as string
+            session.user.emailVerified = token.emailVerified as Date | null
             return session
         },
     },
