@@ -6,7 +6,7 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcrypt'
 import { prisma } from '@/lib/prisma'
 import { cookies } from 'next/headers'
-import { sendVerificationEmail } from '../email'
+import { sendWelcomeEmail } from '@/lib/email'
 
 
 const providers = []
@@ -97,43 +97,24 @@ export const authOptions: NextAuthOptions = {
                 console.error('Error processing invite on signIn:', error)
             }
         },
-        async createUser({ user }) {
-            console.log('📨 createUser triggered for:', user.email)
-            try {
-                const account = await prisma.account.findFirst({
-                    where: { userId: user.id },
+        async linkAccount({ user, account }) {
+            if (account.provider === 'google') {
+                await prisma.user.update({
+                    where: { id: user.id },
+                    data: {
+                        emailVerified: new Date(), // trust Google OAuth
+                    },
                 })
 
-                const isGoogle = account?.provider === 'google'
-                console.log(`account?.provider: ${account?.provider}`)
-
-                if (isGoogle) {
-                    await prisma.user.update({
-                        where: { id: user.id },
-                        data: { emailVerified: new Date() },
-                    })
-
-                    await sendVerificationEmail({
-                        to: user.email!,
-                        name: user.name || undefined,
-                        verifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/wishlists`,
-                        sendVerificationLink: false,
-                    })
-
-                } else if (user.email) {
-                    await sendVerificationEmail({
-                        to: user.email,
-                        name: user.name || undefined,
-                        verifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/wishlists`,
-                        sendVerificationLink: true,
-                    })
-                }
-
-            } catch (err) {
-                console.error('Error sending welcome/verification email:', err)
+                await sendWelcomeEmail({
+                    to: user.email!,
+                    name: user.name || undefined,
+                    verifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/wishlists`,
+                    sendVerificationLink: false, // no need to verify again
+                })
             }
-        }
-        ,
+        },
+
     },
     secret: process.env.NEXTAUTH_SECRET,
 }
