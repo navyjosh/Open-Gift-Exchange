@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { useParams } from 'next/navigation'
 
 interface Member {
@@ -22,8 +22,8 @@ export default function AssignmentsPage() {
             const data = await res.json()
             if (!res.ok) throw new Error(data.error || 'Failed to load members')
             setMembers(data.members)
-        } catch (err: any) {
-            setError(err.message)
+        } catch (err) {
+            setError(`${err}`)
         }
     }
 
@@ -37,8 +37,8 @@ export default function AssignmentsPage() {
                 const data = await res.json()
                 if (!res.ok) throw new Error(data.error || 'Assignment failed')
                 fetchAssignments() // Refresh the list
-            } catch (err: any) {
-                setError(err.message)
+            } catch (err) {
+                setError(`${err}`)
             }
         })
     }
@@ -53,15 +53,11 @@ export default function AssignmentsPage() {
                 const data = await res.json()
                 if (!res.ok) throw new Error(data.error || 'Clear failed')
                 fetchAssignments() // Refresh the list
-            } catch (err: any) {
-                setError(err.message)
+            } catch (err) {
+                setError(`${err}`)
             }
         })
-    }
-
-    useEffect(() => {
-        fetchAssignments()
-    }, [])
+    }    
 
     return (
         <div className="max-w-xl mx-auto mt-10 space-y-6">

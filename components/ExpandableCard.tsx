@@ -5,25 +5,16 @@ interface ExpandableCardProps {
     header: React.ReactNode
     children: React.ReactNode
     borderColor?: string
-    defaultExpanded?: boolean
-    onExpand?: () => void
+    defaultExpanded?: boolean    
 }
 
 export function ExpandableCard({
     header,
     children,
     borderColor = 'border-gray-300 hover:border-blue-400',
-    defaultExpanded = true,
-    onExpand,
+    defaultExpanded = true,    
 }: ExpandableCardProps) {
     const [expanded, setExpanded] = useState(defaultExpanded)
-
-    const toggle = () => {
-        const next = !expanded
-        if (next && onExpand) onExpand()
-        setExpanded(next)
-    }
-
     return (
         <li
             className={`border rounded p-4 transition-colors ${expanded ? 'border-blue-500' : borderColor}`}

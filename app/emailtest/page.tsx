@@ -33,9 +33,9 @@ export default function EmailTestPage() {
 
             setStatus('success')
             setMessage(`✅ Email sent to ${to}`)
-        } catch (err: any) {
+        } catch (err) {
             setStatus('error')
-            setMessage(err.message || 'Something went wrong.')
+            setMessage(`Something went wrong: ${err}`)
         }
     }
 

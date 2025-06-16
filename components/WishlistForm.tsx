@@ -4,8 +4,6 @@ import { useState } from "react"
 import { useWishlistStore } from "@/lib/wishlistStore"
 import { randomUUID } from "crypto"
 
-const id = randomUUID()
-
 export default function WishlistForm() {
     const [name, setName] = useState('')
     const [link, setLink] = useState('')

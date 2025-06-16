@@ -2,25 +2,12 @@
 
 import { useState } from 'react'
 import { useTransition } from 'react'
-
-interface Invite {
-    id: string
-    email: string
-    status: 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'EXPIRED'
-    createdAt: string
-}
-
-interface InviteListProps {
-    exchange: {
-        id: string
-        name: string
-        invites: Invite[]
-    }
-}
+import { GiftExchange } from '@prisma/client'
+import { Invite } from '@prisma/client'
 
 
 
-export function InviteList({ exchange }: InviteListProps) {
+export function InviteList( { exchange }: {exchange: GiftExchange & { invites: Invite[]}}) {
     const [invites, setInvites] = useState<Invite[]>(exchange.invites)
     const [email, setEmail] = useState('')
     const [error, setError] = useState<string | null>(null)

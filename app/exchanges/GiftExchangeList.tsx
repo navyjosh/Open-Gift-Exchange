@@ -8,17 +8,18 @@ import { useRouter } from "next/navigation"
 import { ExpandableCard } from "@/components/ExpandableCard"
 import { MemberList } from "@/components/MemberList"
 import { InviteList } from "@/components/InviteList"
+import { GiftExchange, GiftExchangeMember } from "@prisma/client"
 import Link from "next/link"
 
 export default function GiftExchangeList(
     { exchanges, userId }:
         {
-            exchanges: any[],
+            exchanges: (GiftExchange & { members: GiftExchangeMember[] })[],
             userId: string
         }) {
     const router = useRouter()
-    const [deleting, startTransition] = useTransition()
-    const [error, setError] = useState<string | null>(null)
+    const [, startTransition] = useTransition()
+    const [, setError] = useState<string | null>(null)
 
 
     function handleDelete(name: string, id: string): void {
@@ -45,7 +46,7 @@ export default function GiftExchangeList(
             ) : (
                 <ul className="space-y-4">
                     {exchanges.map((exchange) => {
-                        const currentUser = exchange.members.find((m: any) => m.userId === userId)
+                        const currentUser = exchange.members.find((m: GiftExchangeMember) => m.userId === userId)
                         const isAdmin = currentUser?.role === 'ADMIN'
                         return (
                             <ExpandableCard

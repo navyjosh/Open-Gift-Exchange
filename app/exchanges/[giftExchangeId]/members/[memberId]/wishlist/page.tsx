@@ -58,7 +58,7 @@ export default async function MemberWishlistPage({
 
     return (
         <div className="max-w-2xl mx-auto mt-8">
-            <h1 className="text-2xl font-bold mb-4">{member.user.name}'s Wishlist</h1>
+            <h1 className="text-2xl font-bold mb-4">{member.user.name}&apos;s Wishlist</h1>
 
             {member.wishlist.items.length === 0 ? (
                 <p className="text-gray-600 italic">No items on this wishlist.</p>

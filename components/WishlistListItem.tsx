@@ -1,5 +1,5 @@
 'use client'
-import { useEffect } from 'react'
+
 import { useRef } from 'react'
 import { LucideLink2Off, LinkIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -27,10 +27,9 @@ interface WishlistListItemProps {
 }
 
 export function WishlistListItem({ id, name, defaultWishlistId, items: initialItems }: WishlistListItemProps) {
-    const router = useRouter()
-    const [expanded, setExpanded] = useState(false)
-    const [deleting, startTransition] = useTransition()
-    const [error, setError] = useState<string | null>(null)
+    const router = useRouter()    
+    const [, startTransition] = useTransition()
+    const [, setError] = useState<string | null>(null)
 
     const [newItemName, setNewItemName] = useState('')
     const [newItemLink, setNewItemLink] = useState('')
@@ -38,8 +37,7 @@ export function WishlistListItem({ id, name, defaultWishlistId, items: initialIt
     const [newItemNotes, setNewItemNotes] = useState('')
     const [items, setItems] = useState<WishlistItem[]>(initialItems)
 
-    const nameInputRef = useRef<HTMLInputElement>(null)
-    const prevExpandedRef = useRef(false)
+    const nameInputRef = useRef<HTMLInputElement>(null)    
 
     const handleDeleteWishlist = () => {
         if (!confirm(`Are you sure you want to delete your "${name}" Wishlist?`)) return
@@ -88,23 +86,14 @@ export function WishlistListItem({ id, name, defaultWishlistId, items: initialIt
             nameInputRef.current?.focus()
 
         } catch (err) {
-
-            setError('Failed to add item.')
+            setError(`Failed to add item: ${err}`)
         }
 
     }
-    useEffect(() => {
-        if (expanded && !prevExpandedRef.current) {
-            nameInputRef.current?.focus()
-        }
-
-        prevExpandedRef.current = expanded
-    }, [expanded])
 
     return (
 
-        <ExpandableCard
-            onExpand={() => nameInputRef.current?.focus()}
+        <ExpandableCard            
             header={
                 <>
                     <div>
@@ -136,7 +125,7 @@ export function WishlistListItem({ id, name, defaultWishlistId, items: initialIt
                                                 await fetch(`/api/wishlists/${id}/set-default`, { method: 'POST' })
                                                 router.refresh()
                                             } catch (err) {
-                                                console.error('Failed to set default wishlist')
+                                                console.error(`${err}`)
                                             }
                                         }}
                                         className="px-3 py-2 hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-600 dark:text-blue-300 cursor-pointer"

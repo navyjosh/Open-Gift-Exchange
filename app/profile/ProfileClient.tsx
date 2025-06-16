@@ -17,8 +17,8 @@ export function ProfileClient({ user }: { user: User }) {
             if (!res.ok) throw new Error(data.error || 'Failed to send email')
 
             toast.success('Verification email sent!')
-        } catch (err: any) {
-            toast.error(err.message)
+        } catch (err) {
+            toast.error(`${err}`)
         } finally {
             setLoading(false)
         }
