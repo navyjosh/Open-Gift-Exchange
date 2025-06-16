@@ -9,11 +9,11 @@ export default async function MemberWishlistPage({
 }: {
     params: Promise<{ giftExchangeId: string; memberId: string }>
 }) {
-    console.log('memberwishlistpage')
+    
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {
-        console.log('session')
+        
         notFound()
     }
 
@@ -30,7 +30,7 @@ export default async function MemberWishlistPage({
     })
 
     if (!viewerMembership) {
-        console.log('viewer')
+        
         notFound()
     }
 
@@ -52,7 +52,7 @@ export default async function MemberWishlistPage({
     })
 
     if (!member || !member.wishlist) {
-        console.log('member or wishlist')
+        
         notFound()
     }
 

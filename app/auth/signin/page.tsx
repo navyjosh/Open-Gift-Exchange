@@ -25,8 +25,7 @@ export default function SignInPage() {
             callbackUrl: '/wishlists'
         })
 
-        if (res?.error) {
-            console.log('1')
+        if (res?.error) {            
             setError('Invalid credentials')
         } else if (res?.url) {
             router.push(res.url)

@@ -17,7 +17,7 @@ export async function DELETE(req: NextRequest) {
     if (!id) {
         return NextResponse.json({ error: 'Missing ID in URL' }, { status: 400 })
     }
-    console.log(`wishlistItemId: ${id}`)
+    
 
     const wishlistItem = await prisma.wishlistItem.findUnique({
         where: { id },
@@ -29,8 +29,7 @@ export async function DELETE(req: NextRequest) {
             },
         },
     })
-    console.log(`wishlistItem: ${wishlistItem}`)
-    console.log(`wishlistItem.wishlist: ${wishlistItem?.wishlist}`)
+    
 
     // Check if item exists and belongs to the user
 if (!wishlistItem || wishlistItem.wishlist.userId !== session.user.id) {
