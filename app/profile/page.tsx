@@ -1,22 +1,26 @@
 // app/profile/ProfileClient.tsx
 'use client'
 
-import { useState } from 'react'
+import {  useState } from 'react'
 import { Button } from '@/components/Button'
 import toast from 'react-hot-toast'
 import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 
 
-export default function Profile() {
+export default function Profile() {    
     const [loading, setLoading] = useState(false)
-    const { data: session, } = useSession()
-    if (!session) {
+    const { data: session, status } = useSession({
+        required: true,
+        onUnauthenticated() {
+            redirect('/auth/signin')
+        }
+    }) 
+
+    if (status === 'loading') {
         return <p>Loading...</p>
     }
-    const user = session?.user
-    if (!user) {
-        return <p>Error getting user</p>
-    }
+    const user = session.user
 
     const resendEmail = async () => {
         try {
@@ -40,7 +44,7 @@ export default function Profile() {
             <div className="bg-white dark:bg-gray-800 shadow rounded p-6 space-y-4">
                 <div>
                     <p className="text-sm text-gray-500">Name</p>
-                    <p className="font-medium">{user.name || 'No name provided'}</p>
+                    <p className="font-medium">{user.name }</p>
                 </div>
                 <div>
                     <p className="text-sm text-gray-500">Email</p>
@@ -49,10 +53,10 @@ export default function Profile() {
                 <div>
                     <p className="text-sm text-gray-500">Email Verified</p>
                     <p className="font-medium">
-                        {user.emailVerified === null ? 'No' : 'Yes'}
+                        {user.emailVerified == null ? 'No' : 'Yes'}
                     </p>
 
-                    {user.emailVerified === null && (
+                    {user.emailVerified == null && (
                         <Button
                             onClick={resendEmail}
                             className="mt-2 text-sm"
