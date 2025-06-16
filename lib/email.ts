@@ -26,24 +26,19 @@ export async function sendInviteEmail({
     exchangeName,
     inviteLink,
 }: InviteEmailOptions) {
-    const emailContent = `
-TO: ${to}
-SUBJECT: 🎁 You're invited to join ${exchangeName}!
-
-${inviterName} has invited you to join the gift exchange "${exchangeName}".
+    const emailContent = `${inviterName} has invited you to join the gift exchange "${exchangeName}".
 
 Click here to accept your invite:
 ${inviteLink}
 
 This invite may expire soon.
 `
-
-    const outputPath = path.join(process.cwd(), 'emails', `${Date.now()}_${to.replace(/[@.]/g, '_')}.txt`)
-
-    fs.mkdirSync(path.dirname(outputPath), { recursive: true })
-    fs.writeFileSync(outputPath, emailContent.trim())
-
-    console.log(`Dummy invite email saved to: ${outputPath}`)
+    await transporter.sendMail({
+        to,
+        from: '"Gift Exchange" <opengiftexchange@zohomail.com>',
+        subject: `🎁 You're invited to join ${exchangeName}!`,
+        html: emailContent,
+    })
 }
 
 interface VerificationEmailOptions {
