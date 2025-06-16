@@ -55,7 +55,7 @@ export type GiftExchangeMemberWithUser = Prisma.GiftExchangeMemberGetPayload<{
     }
 }>
 
-export type Invite = Prisma.InviteGetPayload<{
+export type InviteListType = Prisma.InviteGetPayload<{
     select: {
         id: true
         email: true
