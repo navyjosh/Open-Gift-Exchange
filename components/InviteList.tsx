@@ -2,11 +2,11 @@
 
 import { useState } from 'react'
 import { useTransition } from 'react'
-import type { GiftExchangeWithMembersAndInvites, Invite } from '@/types/giftExchange'
+import type { GiftExchangeWithMembersAndInvites, InviteListType } from '@/types/giftExchange'
 
 
 export function InviteList({ exchange }: { exchange: GiftExchangeWithMembersAndInvites }) {
-    const [invites, setInvites] = useState<Invite[]>(exchange.invites)
+    const [invites, setInvites] = useState<InviteListType[]>(exchange.invites)
     const [email, setEmail] = useState('')
     const [error, setError] = useState<string | null>(null)
     const [pending, startTransition] = useTransition()
@@ -35,7 +35,7 @@ export function InviteList({ exchange }: { exchange: GiftExchangeWithMembersAndI
 
                 setEmail('')
                 setInvites((prev) => [...prev, data.invite])
-                console.log(`invites: ${invites}`)
+                
             } catch (err) {
                 setError('Something went wrong.')
                 console.error(err)
