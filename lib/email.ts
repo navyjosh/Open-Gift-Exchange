@@ -1,6 +1,3 @@
-// lib/email.ts
-import fs from 'fs'
-import path from 'path'
 import nodemailer from 'nodemailer'
 
 export const transporter = nodemailer.createTransport({
