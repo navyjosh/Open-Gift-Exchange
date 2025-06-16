@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 import { NextRequest, NextResponse } from 'next/server'
 import { randomBytes } from 'crypto'
 import { addMinutes } from 'date-fns'
-import { sendVerificationEmail } from '@/lib/email'
+import { sendWelcomeEmail } from '@/lib/email'
 
 export async function POST(req: NextRequest) {
     const { email, password, name } = await req.json()
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
 
     // Send verification email
     try {
-        await sendVerificationEmail({
+        await sendWelcomeEmail({
             to: email,
             name: name,
             verifyUrl: verifyUrl,

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { sendVerificationEmail } from '@/lib/email'
+import { sendWelcomeEmail } from '@/lib/email'
 import { prisma } from '@/lib/prisma'
 import { randomBytes } from 'crypto'
 import { addHours } from 'date-fns'
@@ -39,7 +39,7 @@ export async function POST() {
 
     const verifyUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify?token=${token}`
 
-    await sendVerificationEmail({
+    await sendWelcomeEmail({
         to: user.email,
         name: user.name ?? undefined,
         verifyUrl,

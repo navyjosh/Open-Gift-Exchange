@@ -1,7 +1,7 @@
 // /api/auth/verify/send/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { sendVerificationEmail } from '@/lib/email'
+import { sendWelcomeEmail } from '@/lib/email'
 import { randomBytes } from 'crypto'
 import { addMinutes } from 'date-fns'
 
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
     const verifyUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify?token=${token}`
 
-    await sendVerificationEmail(email, verifyUrl)
+    await sendWelcomeEmail(email, verifyUrl)
 
     return NextResponse.json({ success: true })
 }

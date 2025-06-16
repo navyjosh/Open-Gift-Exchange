@@ -53,7 +53,7 @@ interface VerificationEmailOptions {
     sendVerificationLink?: boolean
 }
 
-export async function sendVerificationEmail({
+export async function sendWelcomeEmail({
     to,
     name,
     verifyUrl,
@@ -84,3 +84,5 @@ export async function sendVerificationEmail({
         `,
     })
 }
+
+
