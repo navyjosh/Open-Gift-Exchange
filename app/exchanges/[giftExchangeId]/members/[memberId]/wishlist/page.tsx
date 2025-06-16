@@ -7,7 +7,7 @@ import { prisma } from '@/lib/prisma'
 export default async function MemberWishlistPage({
     params,
 }: {
-    params: { giftExchangeId: string; memberId: string }
+    params: Promise<{ giftExchangeId: string; memberId: string }>
 }) {
     console.log('memberwishlistpage')
     const session = await getServerSession(authOptions)
@@ -17,7 +17,7 @@ export default async function MemberWishlistPage({
         notFound()
     }
 
-    const { giftExchangeId, memberId } = params
+    const { giftExchangeId, memberId } = await params
 
     // Verify that current user is part of this exchange
     const viewerMembership = await prisma.giftExchangeMember.findUnique({

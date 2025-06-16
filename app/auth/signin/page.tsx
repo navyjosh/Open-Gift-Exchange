@@ -5,7 +5,7 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
-export default function SignInPage({ inviteToken }: { inviteToken: string | null }) {
+export default function SignInPage() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
@@ -18,16 +18,11 @@ export default function SignInPage({ inviteToken }: { inviteToken: string | null
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-
-        const callbackUrl = inviteToken
-            ? `/auth/post-invite?token=${inviteToken}`
-            : '/wishlists'
-
         const res = await signIn('credentials', {
             redirect: false,
             email,
             password,
-            callbackUrl: callbackUrl
+            callbackUrl: '/wishlists'
         })
 
         if (res?.error) {

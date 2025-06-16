@@ -2,11 +2,11 @@ import { requireSession } from '@/lib/auth/session'
 import { prisma } from '@/lib/prisma'
 import GiftExchangeList from './GiftExchangeList'
 import { NewGiftExchangeButton } from '@/components/NewGiftExchangeButton'
+import { GiftExchangeWithMembersAndInvites } from '@/types/giftExchange'
 
 export default async function GiftExchangesPage() {
     const session = await requireSession()
-
-    const exchanges = await prisma.giftExchange.findMany({
+    const exchanges: GiftExchangeWithMembersAndInvites[] = await prisma.giftExchange.findMany({
         where: {
             members: {
                 some: { userId: session.user.id },
@@ -18,19 +18,16 @@ export default async function GiftExchangesPage() {
                     id: true,
                     userId: true,
                     role: true,
+                    assignedToId: true,
+                    assignedTo: true,
                     user: {
                         select: {
                             id: true,
                             name: true,
                             email: true,
                         }
-                    },
-                    assignedToId: true,
-                    assignedTo: true
-                },
-                orderBy: {
-                    role: 'desc',                    
-                }            
+                    }
+                }
             },
             invites: {
                 orderBy: { status: 'asc' },

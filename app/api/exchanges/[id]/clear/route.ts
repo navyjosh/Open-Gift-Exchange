@@ -4,9 +4,9 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
-    const exchangeId = params.id
+    const exchangeId = (await params).id
 
     if (!exchangeId) {
         return NextResponse.json({ error: 'Missing exchange ID' }, { status: 400 })

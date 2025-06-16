@@ -8,13 +8,13 @@ import { useRouter } from "next/navigation"
 import { ExpandableCard } from "@/components/ExpandableCard"
 import { MemberList } from "@/components/MemberList"
 import { InviteList } from "@/components/InviteList"
-import { GiftExchange, GiftExchangeMember } from "@prisma/client"
 import Link from "next/link"
+import type { GiftExchangeWithMembersAndInvites } from "@/types/giftExchange"
 
 export default function GiftExchangeList(
     { exchanges, userId }:
         {
-            exchanges: (GiftExchange & { members: GiftExchangeMember[] })[],
+            exchanges: GiftExchangeWithMembersAndInvites[],
             userId: string
         }) {
     const router = useRouter()
@@ -46,7 +46,7 @@ export default function GiftExchangeList(
             ) : (
                 <ul className="space-y-4">
                     {exchanges.map((exchange) => {
-                        const currentUser = exchange.members.find((m: GiftExchangeMember) => m.userId === userId)
+                        const currentUser = exchange.members.find((m) => m.userId === userId)
                         const isAdmin = currentUser?.role === 'ADMIN'
                         return (
                             <ExpandableCard

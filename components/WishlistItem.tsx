@@ -10,7 +10,7 @@ export default function WishlistItem({ item }: { item: Item }) {
             <div>
                 <h3 className="text-lg font-semibold">{item.name}</h3>
                 {item.link && (
-                    <a href={item.link} target="_blank" rel="noopener noreferrer" class="text-blue-500 underline">
+                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                         View
                     </a>
                 )}

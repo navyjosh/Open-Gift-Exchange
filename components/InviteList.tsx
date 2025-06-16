@@ -2,19 +2,17 @@
 
 import { useState } from 'react'
 import { useTransition } from 'react'
-import { GiftExchange } from '@prisma/client'
-import { Invite } from '@prisma/client'
+import type { GiftExchangeWithMembersAndInvites, Invite } from '@/types/giftExchange'
 
 
-
-export function InviteList( { exchange }: {exchange: GiftExchange & { invites: Invite[]}}) {
+export function InviteList({ exchange }: { exchange: GiftExchangeWithMembersAndInvites }) {
     const [invites, setInvites] = useState<Invite[]>(exchange.invites)
     const [email, setEmail] = useState('')
     const [error, setError] = useState<string | null>(null)
     const [pending, startTransition] = useTransition()
     const exchangeId = exchange.id
     const exchangeName = exchange.name
-    
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -34,7 +32,7 @@ export function InviteList( { exchange }: {exchange: GiftExchange & { invites: I
                     return
                 }
 
-                
+
                 setEmail('')
                 setInvites((prev) => [...prev, data.invite])
                 console.log(`invites: ${invites}`)

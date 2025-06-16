@@ -2,11 +2,10 @@
 
 import { Mail, Edit, ListTodo, Trash2, Check, X } from 'lucide-react'
 import Link from 'next/link'
-import { GiftExchangeMember } from '@prisma/client'
-import { User } from '@prisma/client'
+import type { GiftExchangeMemberWithUser } from '@/types/giftExchange'
 
 
-export function MemberList({ members, exchangeId }: {members: (GiftExchangeMember & {user: User})[], exchangeId: string}) {
+export function MemberList({ members, exchangeId }: {members: GiftExchangeMemberWithUser[], exchangeId: string}) {
     return (
         <div className="mt-6">
             <p className="font-semibold text-sm mb-2">Members:</p>
