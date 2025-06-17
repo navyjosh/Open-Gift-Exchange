@@ -9,11 +9,9 @@ export default async function MemberWishlistPage({
 }: {
     params: Promise<{ giftExchangeId: string; memberId: string }>
 }) {
-    
     const session = await getServerSession(authOptions)
 
-    if (!session?.user?.id) {
-        
+    if (!session?.user?.id) {        
         notFound()
     }
 
@@ -29,12 +27,11 @@ export default async function MemberWishlistPage({
         },
     })
 
-    if (!viewerMembership) {
-        
+    if (!viewerMembership) {        
         notFound()
     }
 
-    // Get the member and their wishlist
+    // Get the member and their wishlist (if any)
     const member = await prisma.giftExchangeMember.findUnique({
         where: { id: memberId },
         include: {
@@ -51,20 +48,53 @@ export default async function MemberWishlistPage({
         },
     })
 
-    if (!member || !member.wishlist) {
-        
+    if (!member) {
         notFound()
+    }
+
+    let wishlist = member.wishlist
+
+    if (!wishlist) {
+        // Try fetching the default wishlist for this member's user
+        const defaultWishlist = await prisma.wishlist.findUnique({
+            where: {
+                id: member.userId, // member.userId doesn't exist on `member.user`, we need to fetch it from GiftExchangeMember
+            },
+            include: {
+                items: true,
+            },
+        })
+        if (!defaultWishlist) {
+            // fallback to user's defaultWishlist
+            const user = await prisma.user.findUnique({
+                where: { id: member.userId },
+                select: { defaultWishlistId: true },
+            })
+
+            if (!user?.defaultWishlistId) {
+                return <p>This user has no wishlist</p>
+            }
+
+            wishlist = await prisma.wishlist.findUnique({
+                where: { id: user.defaultWishlistId },
+                include: { items: true },
+            })
+        }
+        if (!wishlist) {
+            return <p>This person doesn&apos;t have a wishlist yet. Poke them!</p>
+        }
+
     }
 
     return (
         <div className="max-w-2xl mx-auto mt-8">
             <h1 className="text-2xl font-bold mb-4">{member.user.name}&apos;s Wishlist</h1>
 
-            {member.wishlist.items.length === 0 ? (
+            {wishlist.items.length === 0 ? (
                 <p className="text-gray-600 italic">No items on this wishlist.</p>
             ) : (
                 <ul className="space-y-4">
-                    {member.wishlist.items.map((item) => (
+                    {wishlist.items.map((item) => (
                         <li key={item.id} className="border p-4 rounded shadow-sm">
                             <p className="font-semibold">{item.name}</p>
                             {item.price && (
