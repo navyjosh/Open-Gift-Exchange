@@ -1,1 +1,1 @@
-export const isGoogleAuthEnabled = process.env.GOOGLE_AUTH_ENABLED === 'true'
+export const isGoogleAuthEnabled = process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === 'true'
