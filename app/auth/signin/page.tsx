@@ -4,13 +4,13 @@ import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { isGoogleAuthEnabled } from '@/lib/auth/config'
 
 export default function SignInPage() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
-    const router = useRouter()
-    const showGoogle = process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === 'true';
+    const router = useRouter()    
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -34,7 +34,7 @@ export default function SignInPage() {
         <div className="max-w-sm mx-auto mt-20 p-6 border rounded shadow">
             <h1 className="text-2xl font-bold mb-6">Sign In</h1>
 
-            {showGoogle && (
+            {isGoogleAuthEnabled && (
                 <div className="mb-4">
                     {/* Light mode image */}
                     <Image
