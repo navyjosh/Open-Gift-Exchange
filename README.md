@@ -63,7 +63,7 @@ npm install
 Open `.env.example` and provide the following configuration:
 1. **DATABASE_URL**: the PostgreSQL connection string
 2. **GOOGLE_CLIENT_ID** & **GOOGLE_CLIENT_SECRET**: You'll get these when you set up your Google Oauth 2.0 provider
-3. **NEXT_PUBLIC_GOOGLE_AUTH_ENABLED**: set this to `true` if you're using Google Auth
+3. **NEXT_PUBLIC_GOOGLE_AUTH_ENABLED**: set this to `"true"` if you're using Google Auth
 4. **NEXTAUTH_SECRET**: This should be a secure random string. You can generate one like this: `openssl rand -base64 32`
 5. Copy it to `.env`:
 ```bash
