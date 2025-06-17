@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { register } from '@/lib/auth/client'
@@ -12,11 +12,7 @@ export default function SignUpPage() {
     const [password, setPassword] = useState('')
     const [name, setName] = useState('')
     const [error, setError] = useState('')
-    const [showGoogle, setShowGoogle] = useState(false)
-
-    useEffect(() => {
-        setShowGoogle(process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === 'true')
-    }, [])
+    const showGoogle = process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === 'true';    
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()

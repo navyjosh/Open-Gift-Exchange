@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
@@ -10,11 +10,7 @@ export default function SignInPage() {
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const router = useRouter()
-    const [showGoogle, setShowGoogle] = useState(false)
-
-    useEffect(() => {
-        setShowGoogle(process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === 'true')
-    }, [])
+    const showGoogle = process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === 'true';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
