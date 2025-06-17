@@ -1,66 +1,94 @@
-# syntax=docker.io/docker/dockerfile:1
+# syntax=docker/dockerfile:1
 
-FROM node:18-alpine AS base
+##############################
+# Base image for all stages
+##############################
+FROM node:18-slim AS base
 
-# Install dependencies only when needed
-FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+# Avoid prompts and keep builds clean
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install OpenSSL (required by Prisma)
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
+
+##############################
+# Dependencies stage
+##############################
+FROM base AS deps
+
+# Install dependencies based on lockfiles
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
 RUN \
     if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
     elif [ -f package-lock.json ]; then npm ci; \
-    elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
-    else echo "Lockfile not found." && exit 1; \
+    elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install --frozen-lockfile; \
+    else echo "No lockfile found." && exit 1; \
     fi
 
 
-# Rebuild the source code only when needed
+##############################
+# Build stage
+##############################
 FROM base AS builder
-WORKDIR /app
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED=1
+# Generate Prisma Client
+RUN npx prisma generate
 
-RUN \
-    if [ -f yarn.lock ]; then yarn run build; \
-    elif [ -f package-lock.json ]; then npm run build; \
-    elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
-    else echo "Lockfile not found." && exit 1; \
-    fi
+ARG NEXT_PUBLIC_GOOGLE_AUTH_ENABLED
+ENV NEXT_PUBLIC_GOOGLE_AUTH_ENABLED=$NEXT_PUBLIC_GOOGLE_AUTH_ENABLED
 
-# Production image, copy all the files and run next
+
+# Build Next.js app
+RUN npm run build
+
+
+##############################
+# Production runtime stage
+##############################
 FROM base AS runner
+
+# Create non-root user with home dir (for npx/npm safety)
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 --home /home/nextjs nextjs
+ENV HOME=/home/nextjs
+
+# Set environment
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
 WORKDIR /app
 
-ENV NODE_ENV=production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/public ./public
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
+# Copy built app and static files
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
+# Copy Prisma schema + generated client for runtime use
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+
+# Optional: copy package.json (e.g., if your app/server depends on it)
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+RUN apt-get update -y && apt-get install -y openssl postgresql-client && rm -rf /var/lib/apt/lists/*
+
+
+COPY --from=builder /app/entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
+
+# Run app as non-root user
 USER nextjs
 
 EXPOSE 3000
 
-ENV PORT=3000
 
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
-ENV HOSTNAME="0.0.0.0"
-CMD ["npm", "start"]
+
+# Start the app
+CMD ["node", "server.js"]
