@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:latest
-    container_name: wishlist-db
+    container_name: exchange-db
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
