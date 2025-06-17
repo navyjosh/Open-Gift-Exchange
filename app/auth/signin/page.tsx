@@ -1,16 +1,26 @@
 'use client'
 
-import { useState } from 'react'
-import { signIn } from 'next-auth/react'
+import { useEffect, useState } from 'react'
+import { signIn, getProviders } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { isGoogleAuthEnabled } from '@/lib/auth/config'
 
 export default function SignInPage() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
-    const router = useRouter()    
+    const [hasGoogleProvider, setHasGoogleProvider] = useState(false)
+    const router = useRouter()
+
+    useEffect(() => {
+        async function loadProviders() {
+            const providers = await getProviders()
+            if (providers && 'google' in providers) {
+                setHasGoogleProvider(true)
+            }
+        }
+        loadProviders()
+    }, [])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -21,7 +31,7 @@ export default function SignInPage() {
             callbackUrl: '/wishlists'
         })
 
-        if (res?.error) {            
+        if (res?.error) {
             setError('Invalid credentials')
         } else if (res?.url) {
             router.push(res.url)
@@ -34,9 +44,8 @@ export default function SignInPage() {
         <div className="max-w-sm mx-auto mt-20 p-6 border rounded shadow">
             <h1 className="text-2xl font-bold mb-6">Sign In</h1>
 
-            {isGoogleAuthEnabled && (
+            {hasGoogleProvider && (
                 <div className="mb-4">
-                    {/* Light mode image */}
                     <Image
                         width={150}
                         height={20}
@@ -45,8 +54,6 @@ export default function SignInPage() {
                         className="block dark:hidden max-w-xs mx-auto cursor-pointer"
                         onClick={() => signIn('google', { callbackUrl: '/wishlists' })}
                     />
-
-                    {/* Dark mode image */}
                     <Image
                         width={200}
                         height={20}
@@ -56,8 +63,8 @@ export default function SignInPage() {
                         onClick={() => signIn('google', { callbackUrl: '/wishlists' })}
                     />
                 </div>
-
             )}
+
             <div className="flex w-full items-center gap-2 py-6 text-sm text-slate-600">
                 <div className="h-px w-full bg-slate-200"></div>
                 OR
@@ -102,6 +109,5 @@ export default function SignInPage() {
                 </button>
             </p>
         </div>
-
     )
 }

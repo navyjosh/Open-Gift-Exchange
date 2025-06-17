@@ -1,5 +1,4 @@
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import { isGoogleAuthEnabled } from './config'
 import GoogleProvider from 'next-auth/providers/google'
 import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -10,7 +9,7 @@ import { sendWelcomeEmail } from '@/lib/email'
 
 
 const providers = []
-if (isGoogleAuthEnabled) {
+if (process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === 'true') {
     providers.push(GoogleProvider({
         clientId: process.env.GOOGLE_CLIENT_ID!,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET!
