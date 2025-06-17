@@ -13,7 +13,10 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   app:
-    build: .      
+    build:
+      context: .
+      args: 
+        NEXT_PUBLIC_GOOGLE_AUTH_ENABLED: "true"
     image: open-gift-exchange
     container_name: exchange
     restart: unless-stopped
@@ -38,7 +41,7 @@ services:
       EMAIL_USER: 
       EMAIL_PASS: 
       EMAIL_FROM: "Open Gift Exchange <opengiftexchnage@yourdomain.com>"
-      
+
     ports:
       - "3000:3000"
 
