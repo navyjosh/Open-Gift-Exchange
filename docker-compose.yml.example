@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: wishlist-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: exchange_user
+      POSTGRES_PASSWORD: exchange_pass
+      POSTGRES_DB: openGiftExchange
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .      
+    image: open-gift-exchange
+    container_name: exchange
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "postgresql://exchange_user:exchange_pass@db:5432/openGiftExchange"          
+      GOOGLE_CLIENT_ID: 
+      GOOGLE_CLIENT_SECRET: 
+      NEXTAUTH_SECRET: 
+      NEXTAUTH_URL: "http://localhost:3000"
+      NEXT_PUBLIC_GOOGLE_AUTH_ENABLED: "true"
+      NEXT_PUBLIC_BASE_URL: "https://opengiftexchange.yourdomain.com/"      
+
+      PGHOST: db
+      PGPORT: 5432
+      PGUSER: wishlist_user
+
+      EMAIL_HOST: 
+      EMAIL_PORT: "465"
+      EMAIL_SECURE: "true"
+      EMAIL_USER: 
+      EMAIL_PASS: 
+      EMAIL_FROM: "Open Gift Exchange <opengiftexchnage@yourdomain.com>"
+      
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
+
+networks:
+  default:
