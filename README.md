@@ -1,6 +1,6 @@
 # 📝 Wishlist App
 
-A full-stack wishlist manager built with **Next.js 14 App Router**, **Prisma**, **PostgreSQL**, and **Tailwind CSS**.
+A full-stack Free / Libre Open Source Gift Exchange Suite built with **Next.js 15 App Router**, **Prisma ORM**, **PostgreSQL Backend**, and **Tailwind CSS**.
 
 Users can:
 
