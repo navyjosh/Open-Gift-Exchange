@@ -19,16 +19,16 @@ Future goals:
 ---
 
 ## 🚀 Setting up Dev Environment
-⚠️ These setup instructions are still evolving. If you run into issues, please open an issue or PR — all feedback is welcome!
+These setup instructions are still evolving. These steps will help you set up a development environment for contributing or hacking your own version of this app. If you run into issues, please open an issue or PR — all feedback is welcome!
 
 ### 1. Google OAuth
-⚠️ Authentication is still in early stages.  
-
 This project currently supports credential authentication through NextAuth as well as Google's OAuth 2.0. Here's a [link to google support page](https://support.google.com/googleapi/answer/6158849?hl=en) on how to set this up. 
 
 ### 2. Stand up your PostgreSQL DB
-You will need a postgres db up and running to support the backend of this application. Here's a simple `docker-compose.yml` that will stand one up for dev environment.
+You will need to stand up a database to support the backend of this application. Here's a simple `docker-compose.yml` that will stand one up for dev environment. If you already have one somewhere then you can skip this step, just make sure the database name matches what you have in your .env file.
+
 ```yml
+# Example docker-compose.yml for a postgres db that will work for this app
 services:
   db:
     image: postgres:latest
@@ -46,7 +46,7 @@ services:
 volumes:
   postgres_data:
 ```
-Once you've created this file (I recommend creating this outside of the project directory) run the following command:
+Then you can launch the container with docker compose:
 ```bash
 docker compose up -d
 ```
@@ -72,11 +72,12 @@ Open `.env.example` and provide the following configuration:
 cp example.env .env
 ```
 
-### 6. Migrate schema to your db
+### 6. Generate Prisma schema and push to your db
 ```bash
-npx prisma migrate dev --name init
+npx prisma generate && npx prisma db push
 ```
 ### 7. (Optional) Seed the database
+Seeding the database will put dummy records great for testing or showcasing bugs or features.
 ```bash
 npx prisma db seed
 ```
