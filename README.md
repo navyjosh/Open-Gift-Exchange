@@ -4,15 +4,17 @@ A full-stack Free / Libre Open Source Gift Exchange Suite built with **Next.js 1
 
 Users can:
 
+- Create and organize Gift Exchanges
+- Send invitation to join a Gift Exchange to an email address
 - Create and manage wishlists
 - Add, edit, and delete wishlist items (with name, link, price, and notes)
 - Use clean keyboard-first UX, including inline entry and context menus
 
 Future goals:
- - Publishing your wishlist for use externally via API
- - Setting up a gift exchange secret santa type of thing
- - Email notifications
- - More auth options
+ - Add ability to claim an item on another's wishlist so that it won't be purchased by more than one individual
+ - Anonymous messaging of users within a GiftExchange to reach out to them without revealing the "assigned santa"
+ - Link items on multiple lists as a single item for claiming
+ - Create mobile app?
 
 ---
 
