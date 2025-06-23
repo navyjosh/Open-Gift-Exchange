@@ -3,9 +3,40 @@
 import { Mail, Edit, ListTodo, Trash2, Check, X } from 'lucide-react'
 import Link from 'next/link'
 import type { GiftExchangeMemberWithUser } from '@/types/giftExchange'
+import toast from 'react-hot-toast'
 
 
-export function MemberList({ members, exchangeId }: {members: GiftExchangeMemberWithUser[], exchangeId: string}) {
+export function MemberList({ members, exchangeId }: { members: GiftExchangeMemberWithUser[], exchangeId: string }) {
+    const handleDeleteMember = async (memberId: string, exchangeId: string, userId: string) => {
+        try {
+            const res = await fetch(
+                `/api/members/revoke?memberId=${memberId}&exchangeId=${exchangeId}&userId=${userId}`
+            )
+
+            let data: any = {}
+
+            // Only attempt to parse if there's content
+            const text = await res.text()
+            if (text) {
+                try {
+                    data = JSON.parse(text)
+                } catch (err) {
+                    console.warn("Failed to parse JSON response:", err)
+                }
+            }
+
+            if (!res.ok) {
+                toast.error(data?.error || `Request failed with status ${res.status}`)
+                return
+            }
+
+            toast.success('Member deleted.')
+        } catch (err) {
+            toast.error(`Error: ${err}`)
+        }
+    }
+
+
     return (
         <div className="mt-6">
             <p className="font-semibold text-sm mb-2">Members:</p>
@@ -57,7 +88,9 @@ export function MemberList({ members, exchangeId }: {members: GiftExchangeMember
                                         >
                                             <ListTodo />
                                         </Link>
-                                        <Trash2 />
+
+                                        <Trash2 onClick={async () => handleDeleteMember(member.id, exchangeId, member.userId)} />
+
                                     </div>
                                 </td>
                             </tr>

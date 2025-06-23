@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireSession } from '@/lib/auth/session'
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
     try {
         const session = await requireSession()
-        const { userId, exchangeId } = await req.json()
+        const { memberId, exchangeId, userId } = await req.json()
 
-        if (!userId || !exchangeId) {
-            return NextResponse.json({ error: 'Missing userId or exchangeId' }, { status: 400 })
+        if (!memberId || !exchangeId) {
+            return NextResponse.json({ error: 'Missing memberId or exchangeId' }, { status: 400 })
         }
 
         // Ensure current user is admin of the exchange
@@ -26,30 +26,23 @@ export async function POST(req: Request) {
         }
 
         // Prevent removing self as admin
-        if (session.user.id === userId) {
+        if (session.user.id === memberId) {
             return NextResponse.json({ error: 'You cannot remove yourself' }, { status: 400 })
         }
 
         // Revoke membership
-        await prisma.giftExchangeMember.delete({
-            where: {
-                userId_giftExchangeId: {
-                    userId,
-                    giftExchangeId: exchangeId,
-                },
-            },
-        })
+        await prisma.giftExchangeMember.delete({where: {id: memberId}})
 
         await prisma.invite.deleteMany({
             where: {
-                userId,
+                userId: userId,
                 exchangeId: exchangeId,
             },
         })
 
-        return NextResponse.json({ success: true })
+        return NextResponse.json({ success: true }, { status: 200 })
     } catch (err) {
         console.error(err)
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+        return NextResponse.json({ error: `Internal server error: ${err}` }, { status: 500 })
     }
 }
