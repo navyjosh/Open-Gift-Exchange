@@ -40,9 +40,6 @@ COPY . .
 # Generate Prisma Client
 RUN npx prisma generate
 
-ARG NEXT_PUBLIC_GOOGLE_AUTH_ENABLED
-ENV NEXT_PUBLIC_GOOGLE_AUTH_ENABLED=$NEXT_PUBLIC_GOOGLE_AUTH_ENABLED
-
 
 # Build Next.js app
 RUN npm run build
